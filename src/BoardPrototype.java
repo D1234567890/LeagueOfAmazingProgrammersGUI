@@ -5,7 +5,6 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -30,9 +29,10 @@ public class BoardPrototype extends Application {
 	private static Button levelZero, levelOne, levelTwo, levelThree, levelFour, levelFive, levelSix, levelSeven,
 			levelEight, levelNine;
 
-	Font titleFont = new Font("Impact", 40);
+	private static Font titleFont = new Font("Impact", 40);
 
-	static ArrayList<Level> levels = new ArrayList<Level>();
+	private static ArrayList<Level> levels = new ArrayList<Level>();
+	private static ArrayList<Label> unremovableLabels = new ArrayList<Label>();
 
 	public static void main(String[] args) {
 		launch(args);
@@ -64,6 +64,7 @@ public class BoardPrototype extends Application {
 
 		levelLabel = new Label("The League");
 		levelLabel.setFont(titleFont);
+		unremovableLabels.add(levelLabel);
 
 		add.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -173,25 +174,7 @@ public class BoardPrototype extends Application {
 		levelZero.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-
-				for (Node node : flowpane.getChildren()) {
-					if (node instanceof Label && node != levelLabel) {
-						flowpane.getChildren().remove(node);
-					}
-				}
-
-				ArrayList<Label> nameLabels = new ArrayList<Label>();
-
-				for (Level level : levels) {
-					if (level.getLevel() == 0) {
-						
-						for (Student student : level.getStudents()) {
-							nameLabels.add(new Label(student.getName()));
-						}
-					}
-				}
-
-				flowpane.getChildren().addAll(nameLabels);
+				BoardPrototype.removeAndAddNames((byte) 0);
 				flowpane.setStyle("-fx-background: black;");
 				levelLabel.setText("Level 0");
 			}
@@ -200,27 +183,7 @@ public class BoardPrototype extends Application {
 		levelOne.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				
-				for (Node node : flowpane.getChildren()) {
-					
-					if (node instanceof Label && node != levelLabel) {
-						System.out.println("OK");
-						flowpane.getChildren().remove(node);
-						System.out.println("OK");
-					}
-				}
-
-				ArrayList<Label> nameLabels = new ArrayList<Label>();
-
-				for (Level level : levels) {
-					if (level.getLevel() == 1) {
-						for (Student student : level.getStudents()) {
-							nameLabels.add(new Label(student.getName()));
-						}
-					}
-				}
-
-				flowpane.getChildren().addAll(nameLabels);
+				BoardPrototype.removeAndAddNames((byte) 1);
 				flowpane.setStyle("-fx-background: tan;");
 				levelLabel.setText("Level 1");
 			}
@@ -229,25 +192,7 @@ public class BoardPrototype extends Application {
 		levelTwo.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				
-				for (Node node : flowpane.getChildren()) {
-					if (node instanceof Label && node != levelLabel) {
-						flowpane.getChildren().remove(node);
-					}
-				}
-
-				ArrayList<Label> nameLabels = new ArrayList<Label>();
-
-				for (Level level : levels) {
-					if (level.getLevel() == 2) {
-						
-						for (Student student : level.getStudents()) {
-							nameLabels.add(new Label(student.getName()));
-						}
-					}
-				}
-
-				flowpane.getChildren().addAll(nameLabels);
+				BoardPrototype.removeAndAddNames((byte) 2);
 				flowpane.setStyle("-fx-background: red;");
 				levelLabel.setText("Level 2");
 			}
@@ -256,25 +201,7 @@ public class BoardPrototype extends Application {
 		levelThree.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				
-				for (Node node : flowpane.getChildren()) {
-					if (node instanceof Label && node != levelLabel) {
-						flowpane.getChildren().remove(node);
-					}
-				}
-
-				ArrayList<Label> nameLabels = new ArrayList<Label>();
-
-				for (Level level : levels) {
-					if (level.getLevel() == 3) {
-						
-						for (Student student : level.getStudents()) {
-							nameLabels.add(new Label(student.getName()));
-						}
-					}
-				}
-
-				flowpane.getChildren().addAll(nameLabels);
+				BoardPrototype.removeAndAddNames((byte) 3);
 				flowpane.setStyle("-fx-background: orange;");
 				levelLabel.setText("Level 3");
 			}
@@ -283,25 +210,7 @@ public class BoardPrototype extends Application {
 		levelFour.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				
-				for (Node node : flowpane.getChildren()) {
-					if (node instanceof Label && node != levelLabel) {
-						flowpane.getChildren().remove(node);
-					}
-				}
-
-				ArrayList<Label> nameLabels = new ArrayList<Label>();
-
-				for (Level level : levels) {
-					if (level.getLevel() == 4) {
-						
-						for (Student student : level.getStudents()) {
-							nameLabels.add(new Label(student.getName()));
-						}
-					}
-				}
-
-				flowpane.getChildren().addAll(nameLabels);
+				BoardPrototype.removeAndAddNames((byte) 4);
 				flowpane.setStyle("-fx-background: yellow;");
 				levelLabel.setText("Level 4");
 			}
@@ -310,25 +219,7 @@ public class BoardPrototype extends Application {
 		levelFive.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				
-				for (Node node : flowpane.getChildren()) {
-					if (node instanceof Label && node != levelLabel) {
-						flowpane.getChildren().remove(node);
-					}
-				}
-
-				ArrayList<Label> nameLabels = new ArrayList<Label>();
-
-				for (Level level : levels) {
-					if (level.getLevel() == 5) {
-						
-						for (Student student : level.getStudents()) {
-							nameLabels.add(new Label(student.getName()));
-						}
-					}
-				}
-
-				flowpane.getChildren().addAll(nameLabels);
+				BoardPrototype.removeAndAddNames((byte) 5);
 				flowpane.setStyle("-fx-background: blue;");
 				levelLabel.setText("Level 5");
 			}
@@ -337,24 +228,7 @@ public class BoardPrototype extends Application {
 		levelSix.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				
-				for (Node node : flowpane.getChildren()) {
-					if (node instanceof Label && node != levelLabel) {
-						flowpane.getChildren().remove(node);
-					}
-				}
-
-				ArrayList<Label> nameLabels = new ArrayList<Label>();
-
-				for (Level level : levels) {
-					if (level.getLevel() == 6) {
-						for (Student student : level.getStudents()) {
-							nameLabels.add(new Label(student.getName()));
-						}
-					}
-				}
-
-				flowpane.getChildren().addAll(nameLabels);
+				BoardPrototype.removeAndAddNames((byte) 6);
 				flowpane.setStyle("-fx-background: green;");
 				levelLabel.setText("Level 6");
 			}
@@ -363,25 +237,7 @@ public class BoardPrototype extends Application {
 		levelSeven.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				
-				for (Node node : flowpane.getChildren()) {
-					if (node instanceof Label && node != levelLabel) {
-						flowpane.getChildren().remove(node);
-					}
-				}
-
-				ArrayList<Label> nameLabels = new ArrayList<Label>();
-
-				for (Level level : levels) {
-					if (level.getLevel() == 7) {
-						
-						for (Student student : level.getStudents()) {
-							nameLabels.add(new Label(student.getName()));
-						}
-					}
-				}
-
-				flowpane.getChildren().addAll(nameLabels);
+				BoardPrototype.removeAndAddNames((byte) 7);
 				flowpane.setStyle("-fx-background: purple;");
 				levelLabel.setText("Level 7");
 			}
@@ -390,25 +246,7 @@ public class BoardPrototype extends Application {
 		levelEight.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				
-				for (Node node : flowpane.getChildren()) {
-					if (node instanceof Label && node != levelLabel) {
-						flowpane.getChildren().remove(node);
-					}
-				}
-
-				ArrayList<Label> nameLabels = new ArrayList<Label>();
-
-				for (Level level : levels) {
-					if (level.getLevel() == 8) {
-						
-						for (Student student : level.getStudents()) {
-							nameLabels.add(new Label(student.getName()));
-						}
-					}
-				}
-
-				flowpane.getChildren().addAll(nameLabels);
+				BoardPrototype.removeAndAddNames((byte) 8);
 				flowpane.setStyle("-fx-background: gray;");
 				levelLabel.setText("Level 8");
 			}
@@ -417,24 +255,7 @@ public class BoardPrototype extends Application {
 		levelNine.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				
-				for (Node node : flowpane.getChildren()) {
-					if (node instanceof Label && node != levelLabel) {
-						flowpane.getChildren().remove(node);
-					}
-				}
-
-				ArrayList<Label> nameLabels = new ArrayList<Label>();
-
-				for (Level level : levels) {
-					if (level.getLevel() == 9) {
-						for (Student student : level.getStudents()) {
-							nameLabels.add(new Label(student.getName()));
-						}
-					}
-				}
-
-				flowpane.getChildren().addAll(nameLabels);
+				BoardPrototype.removeAndAddNames((byte) 9);
 				flowpane.setStyle("-fx-background: white;");
 				levelLabel.setText("Level 9");
 			}
@@ -488,5 +309,28 @@ public class BoardPrototype extends Application {
 			}
 		}
 		student.setLevelNum(levelNum);
+	}
+
+	public static void removeAndAddNames(byte levelNum) {
+		for (byte i = 0; i < flowpane.getChildren().size(); i++) {
+			if (flowpane.getChildren().get(i) instanceof Label
+					&& !(unremovableLabels.contains(flowpane.getChildren().get(i)))) {
+				flowpane.getChildren().remove(i);
+				i--;
+			}
+		}
+
+		ArrayList<Label> nameLabels = new ArrayList<Label>();
+
+		for (Level level : levels) {
+			if (level.getLevel() == levelNum) {
+
+				for (Student student : level.getStudents()) {
+					nameLabels.add(new Label(student.getName()));
+				}
+			}
+		}
+
+		flowpane.getChildren().addAll(nameLabels);
 	}
 }
