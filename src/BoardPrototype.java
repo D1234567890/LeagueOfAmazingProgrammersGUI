@@ -35,6 +35,7 @@ public class BoardPrototype extends Application {
 	private static ArrayList<Label> unremovableLabels = new ArrayList<Label>();
 
 	public static void main(String[] args) {
+		new BoardPrototype();
 		launch(args);
 	}
 
@@ -65,6 +66,29 @@ public class BoardPrototype extends Application {
 		levelLabel = new Label("The League");
 		levelLabel.setFont(titleFont);
 		unremovableLabels.add(levelLabel);
+
+		flowpane.getChildren().addAll(add, remove, change, promote, levelZero, levelOne, levelTwo, levelThree,
+				levelFour, levelFive, levelSix, levelSeven, levelEight, levelNine, levelLabel);
+
+		flowpane.setPadding(new Insets(20));
+		flowpane.setVgap(VGap);
+		flowpane.setHgap(HGap);
+		flowpane.setStyle("-fx-background: orange;");
+
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("League of Amazing Programmers GUI");
+		primaryStage.show();
+
+		levels.add(new Level((byte) 0));
+		levels.add(new Level((byte) 1));
+		levels.add(new Level((byte) 2));
+		levels.add(new Level((byte) 3));
+		levels.add(new Level((byte) 4));
+		levels.add(new Level((byte) 5));
+		levels.add(new Level((byte) 6));
+		levels.add(new Level((byte) 7));
+		levels.add(new Level((byte) 8));
+		levels.add(new Level((byte) 9));
 
 		add.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -110,9 +134,10 @@ public class BoardPrototype extends Application {
 				Optional<String> findName = textInputDialog.showAndWait();
 
 				for (Level level : levels) {
-					for (Student student : level.getStudents()) {
-						if (student.getName().equalsIgnoreCase(findName.get())) {
-							level.removeStudent(student);
+					for (byte i = 0; i < level.getStudents().size(); i++) {
+						if (level.getStudents().get(i).getName().equalsIgnoreCase(findName.get())) {
+							level.removeStudent(level.getStudents().get(i));
+							i--;
 						}
 					}
 				}
@@ -139,11 +164,12 @@ public class BoardPrototype extends Application {
 				byte newLevelNum = Byte.parseByte(levelOfName.get());
 
 				for (Level level : levels) {
-					for (Student student : level.getStudents()) {
-						if (student.getName().equalsIgnoreCase(findName.get())) {
-							student.setName(newName.get());
-							student.setLocation(newLocationOfName.get());
-							BoardPrototype.changeStudentLevel(student, newLevelNum);
+					for (byte i = 0; i < level.getStudents().size(); i++) {
+						if (level.getStudents().get(i).getName().equalsIgnoreCase(findName.get())) {
+							level.getStudents().get(i).setName(newName.get());
+							level.getStudents().get(i).setLocation(newLocationOfName.get());
+							BoardPrototype.changeStudentLevel(level.getStudents().get(i), newLevelNum);
+							i--;
 						}
 					}
 				}
@@ -160,9 +186,11 @@ public class BoardPrototype extends Application {
 				Optional<String> findName = textInputDialog.showAndWait();
 
 				for (Level level : levels) {
-					for (Student student : level.getStudents()) {
-						if (student.getName().equalsIgnoreCase(findName.get())) {
-							BoardPrototype.changeStudentLevel(student, (byte) (student.getLevelNum() + 1));
+					for (byte i = 0; i < level.getStudents().size(); i++) {
+						if (level.getStudents().get(i).getName().equalsIgnoreCase(findName.get())) {
+							BoardPrototype.changeStudentLevel(level.getStudents().get(i),
+									(byte) (level.getLevel() + 1));
+							i--;
 						}
 					}
 				}
@@ -260,18 +288,6 @@ public class BoardPrototype extends Application {
 				levelLabel.setText("Level 9");
 			}
 		});
-
-		flowpane.getChildren().addAll(add, remove, change, promote, levelZero, levelOne, levelTwo, levelThree,
-				levelFour, levelFive, levelSix, levelSeven, levelEight, levelNine, levelLabel);
-
-		flowpane.setPadding(new Insets(20));
-		flowpane.setVgap(VGap);
-		flowpane.setHgap(HGap);
-		flowpane.setStyle("-fx-background: orange;");
-
-		primaryStage.setScene(scene);
-		primaryStage.setTitle("League of Amazing Programmers GUI");
-		primaryStage.show();
 	}
 
 	public static void addLevel(byte levelNum) {
@@ -306,9 +322,9 @@ public class BoardPrototype extends Application {
 			}
 			if (level.getLevel() == levelNum) {
 				level.addStudent(student);
+				student.setLevelNum(levelNum);
 			}
 		}
-		student.setLevelNum(levelNum);
 	}
 
 	public static void removeAndAddNames(byte levelNum) {
