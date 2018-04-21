@@ -33,8 +33,4 @@ public class Level {
 	public byte getLevel() {
 		return levelNum;
 	}
-
-	public void display() {
-
-	}
 }

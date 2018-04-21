@@ -18,8 +18,8 @@ public class Board extends Application {
 	private static short height = 500;
 
 	private static Stage primaryStage;
-	private static Scene scene1, scene2, scene3, scene4, scene5, scene6, scene7, scene8, scene9, scene10, scene11;
-	private static FlowPane flowpane1, flowpane2, flowpane3, flowpane4, flowpane5, flowpane6, flowpane7, flowpane8,
+	private static Scene scene, scene2, scene3, scene4, scene5, scene6, scene7, scene8, scene9, scene10, scene11;
+	private static FlowPane flowpane, flowpane2, flowpane3, flowpane4, flowpane5, flowpane6, flowpane7, flowpane8,
 			flowpane9, flowpane10, flowpane11;
 	private static Button add, remove, change, promote;
 	private static Button levelZero, levelOne, levelTwo, levelThree, levelFour, levelFive, levelSix, levelSeven,
@@ -35,7 +35,7 @@ public class Board extends Application {
 
 		primaryStage = new Stage();
 
-		flowpane1 = new FlowPane();
+		flowpane = new FlowPane();
 		flowpane2 = new FlowPane();
 		flowpane3 = new FlowPane();
 		flowpane4 = new FlowPane();
@@ -47,7 +47,7 @@ public class Board extends Application {
 		flowpane10 = new FlowPane();
 		flowpane11 = new FlowPane();
 
-		scene1 = new Scene(flowpane1, width, height);
+		scene = new Scene(flowpane, width, height);
 		scene2 = new Scene(flowpane2, width, height);
 		scene3 = new Scene(flowpane3, width, height);
 		scene4 = new Scene(flowpane4, width, height);
@@ -278,12 +278,12 @@ public class Board extends Application {
 			}
 		});
 
-		flowpane1.getChildren().addAll(add, remove, change, promote, levelZero, levelOne, levelTwo, levelThree,
+		flowpane.getChildren().addAll(add, remove, change, promote, levelZero, levelOne, levelTwo, levelThree,
 				levelFour, levelFive, levelSix, levelSeven, levelEight, levelNine);
 
-		flowpane1.setPadding(new Insets(20));
-		flowpane1.setVgap(20);
-		flowpane1.setStyle("-fx-background: pink;");
+		flowpane.setPadding(new Insets(20));
+		flowpane.setVgap(20);
+		flowpane.setStyle("-fx-background: pink;");
 
 		flowpane2.setPadding(new Insets(20));
 		flowpane2.setVgap(20);
@@ -325,7 +325,7 @@ public class Board extends Application {
 		flowpane11.setVgap(20);
 		flowpane11.setStyle("-fx-background: white;");
 
-		primaryStage.setScene(scene1);
+		primaryStage.setScene(scene);
 		primaryStage.setTitle("League of Amazing Programmers GUI");
 		primaryStage.show();
 	}
