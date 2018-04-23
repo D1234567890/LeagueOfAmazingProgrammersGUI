@@ -12,7 +12,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 
-public class Board extends Application {
+public class AlphaBoard extends Application {
 
 	private static short width = 750;
 	private static short height = 500;
@@ -140,7 +140,7 @@ public class Board extends Application {
 						if (student.getName().equalsIgnoreCase(findName.get())) {
 							student.setName(newName.get());
 							student.setLocation(newLocationOfName.get());
-							Board.changeStudentLevel(student, newLevelNum);
+							AlphaBoard.changeStudentLevel(student, newLevelNum);
 						}
 					}
 				}
@@ -159,7 +159,7 @@ public class Board extends Application {
 				for (Level level : levels) {
 					for (Student student : level.getStudents()) {
 						if (student.getName().equalsIgnoreCase(findName.get())) {
-							Board.changeStudentLevel(student, (byte) (student.getLevelNum() + 1));
+							AlphaBoard.changeStudentLevel(student, (byte) (student.getLevelNum() + 1));
 						}
 					}
 				}

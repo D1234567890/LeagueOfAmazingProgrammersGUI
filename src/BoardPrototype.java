@@ -1,3 +1,5 @@
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -5,6 +7,7 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,9 +16,9 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public class BoardPrototype extends Application {
+public class BoardPrototype extends Application implements KeyListener {
 
-	private static short width = 750;
+	private static short width = 800;
 	private static short height = 500;
 
 	private static byte HGap = 2;
@@ -25,14 +28,14 @@ public class BoardPrototype extends Application {
 	private static Scene scene;
 	private static FlowPane flowpane;
 	private static Label levelLabel;
-	private static Button add, remove, change, promote;
+	private static Button home, add, remove, change, promote;
 	private static Button levelZero, levelOne, levelTwo, levelThree, levelFour, levelFive, levelSix, levelSeven,
 			levelEight, levelNine;
 
 	private static Font titleFont = new Font("Impact", 40);
 
 	private static ArrayList<Level> levels = new ArrayList<Level>();
-	private static ArrayList<Label> unremovableLabels = new ArrayList<Label>();
+	private static ArrayList<Node> unremovableNodes = new ArrayList<Node>();
 
 	public static void main(String[] args) {
 		new BoardPrototype();
@@ -47,6 +50,7 @@ public class BoardPrototype extends Application {
 
 		scene = new Scene(flowpane, width, height);
 
+		home = new Button("Home");
 		add = new Button("Add Name");
 		remove = new Button("Remove Name");
 		change = new Button("Change name");
@@ -65,9 +69,9 @@ public class BoardPrototype extends Application {
 
 		levelLabel = new Label("The League");
 		levelLabel.setFont(titleFont);
-		unremovableLabels.add(levelLabel);
+		unremovableNodes.add(levelLabel);
 
-		flowpane.getChildren().addAll(add, remove, change, promote, levelZero, levelOne, levelTwo, levelThree,
+		flowpane.getChildren().addAll(home, add, remove, change, promote, levelZero, levelOne, levelTwo, levelThree,
 				levelFour, levelFive, levelSix, levelSeven, levelEight, levelNine, levelLabel);
 
 		flowpane.setPadding(new Insets(20));
@@ -330,23 +334,51 @@ public class BoardPrototype extends Application {
 	public static void removeAndAddNames(byte levelNum) {
 		for (byte i = 0; i < flowpane.getChildren().size(); i++) {
 			if (flowpane.getChildren().get(i) instanceof Label
-					&& !(unremovableLabels.contains(flowpane.getChildren().get(i)))) {
+					&& !(unremovableNodes.contains(flowpane.getChildren().get(i)))) {
 				flowpane.getChildren().remove(i);
 				i--;
 			}
 		}
 
-		ArrayList<Label> nameLabels = new ArrayList<Label>();
-
 		for (Level level : levels) {
 			if (level.getLevel() == levelNum) {
 
+				Label studentText = new Label();
+				String appendTo = "";
+
 				for (Student student : level.getStudents()) {
-					nameLabels.add(new Label(student.getName()));
+					appendTo += (student.getName() + ", ");
 				}
+
+				if (level.getStudents().size() != 0) {
+					Font textFont = new Font("Times", 100 / level.getStudents().size());
+					studentText.setFont(textFont);
+				}
+
+				studentText.setText(appendTo);
+				studentText.setTranslateX(0);
+				studentText.setTranslateY(50);
+				flowpane.getChildren().add(studentText);
 			}
 		}
+	}
 
-		flowpane.getChildren().addAll(nameLabels);
+	public void keyTyped(KeyEvent e) {
+
+	}
+
+	public void keyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_0) {
+			BoardPrototype.removeAndAddNames((byte) 0);
+			flowpane.setStyle("-fx-background: black;");
+			levelLabel.setText("Level 0");
+		}
+		if (e.getKeyCode() == KeyEvent.VK_1) {
+
+		}
+	}
+
+	public void keyReleased(KeyEvent e) {
+
 	}
 }
