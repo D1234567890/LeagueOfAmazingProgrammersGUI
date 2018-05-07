@@ -34,8 +34,4 @@ public class Student {
 	public void setLevelNum(byte newLevelNum) {
 		levelNum = newLevelNum;
 	}
-	
-	public void display() {
-		
-	}
 }
