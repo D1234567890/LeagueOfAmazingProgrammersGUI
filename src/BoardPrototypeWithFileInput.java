@@ -26,6 +26,8 @@ public class BoardPrototypeWithFileInput extends Application {
 	private static FileReader fr;
 	private static BufferedReader br;
 
+	private boolean loadedData = false;
+
 	private static short width = 2000;
 	private static short height = 1000;
 
@@ -308,71 +310,76 @@ public class BoardPrototypeWithFileInput extends Application {
 			}
 		});
 
-		try {
-			fr = new FileReader("src/input_test.txt");
-			br = new BufferedReader(fr);
-			String line = "";
-			String firstName = "";
-			String lastName = "";
-			String locationId = "";
-			while ((line = br.readLine()) != null) {
-				for (int i = 0; i < line.length() - 12; i++) {
-					if (line.substring(i, i + 10).equalsIgnoreCase("first_name")) {
-						i += 13;
-						if (line.substring(i, i + 3).equals("TA-")) {
-							i += 3;
-						}
-						boolean completed = false;
-						while (!completed) {
-							String character = line.substring(i, i + 1);
-							if (character.equals("\""))
-								completed = true;
-							else
-								firstName += character;
-							i++;
-						}
-					}
-					if (line.substring(i, i + 9).equalsIgnoreCase("last_name")) {
-						i += 12;
-						boolean completed = false;
-						while (!completed) {
-							String character = line.substring(i, i + 1);
-							if (character.equals("\""))
-								completed = true;
-							else
-								lastName += character;
-							i++;
-						}
-					}
-					if (line.substring(i, i + 11).equalsIgnoreCase("location_id")) {
-						i += 13;
-						boolean completed = false;
-						while (!completed) {
-							String character = line.substring(i, i + 1);
-							if (character.equals(","))
-								completed = true;
-							else
-								locationId += character;
-							i++;
-						}
-					}
-					if (!(firstName.equals("")) && !(lastName.equals("")) && !(locationId.equals(""))) {
+		if (!loadedData) {
 
-						Random random = new Random();
-						byte randomLevel = (byte) random.nextInt(levels.size());
-						levels.get(randomLevel)
-								.addStudent(new Student(firstName + " " + lastName, locationId, randomLevel));
+			try {
+				fr = new FileReader("src/input_test.txt");
+				br = new BufferedReader(fr);
+				String line = "";
+				String firstName = "";
+				String lastName = "";
+				String locationId = "";
+				while ((line = br.readLine()) != null) {
+					for (int i = 0; i < line.length() - 12; i++) {
+						if (line.substring(i, i + 10).equalsIgnoreCase("first_name")) {
+							i += 13;
+							if (line.substring(i, i + 3).equals("TA-")) {
+								i += 3;
+							}
+							boolean completed = false;
+							while (!completed) {
+								String character = line.substring(i, i + 1);
+								if (character.equals("\""))
+									completed = true;
+								else
+									firstName += character;
+								i++;
+							}
+						}
+						if (line.substring(i, i + 9).equalsIgnoreCase("last_name")) {
+							i += 12;
+							boolean completed = false;
+							while (!completed) {
+								String character = line.substring(i, i + 1);
+								if (character.equals("\""))
+									completed = true;
+								else
+									lastName += character;
+								i++;
+							}
+						}
+						if (line.substring(i, i + 11).equalsIgnoreCase("location_id")) {
+							i += 13;
+							boolean completed = false;
+							while (!completed) {
+								String character = line.substring(i, i + 1);
+								if (character.equals(","))
+									completed = true;
+								else
+									locationId += character;
+								i++;
+							}
+						}
+						if (!(firstName.equals("")) && !(lastName.equals("")) && !(locationId.equals(""))) {
 
-						firstName = "";
-						lastName = "";
-						locationId = "";
+							Random random = new Random();
+							byte randomLevel = (byte) random.nextInt(levels.size());
+							levels.get(randomLevel)
+									.addStudent(new Student(firstName + " " + lastName, locationId, randomLevel));
+
+							firstName = "";
+							lastName = "";
+							locationId = "";
+						}
 					}
 				}
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+
+			loadedData = true;
 		}
 	}
 
@@ -402,6 +409,10 @@ public class BoardPrototypeWithFileInput extends Application {
 	}
 
 	public static void changeStudentLevel(Student student, byte levelNum) {
+
+		System.out.println("HERE");
+		boolean complete = false;
+
 		for (Level level : levels) {
 			if (level.hasStudent(student)) {
 				level.removeStudent(student);
@@ -409,8 +420,11 @@ public class BoardPrototypeWithFileInput extends Application {
 			if (level.getLevel() == levelNum) {
 				level.addStudent(student);
 				student.setLevelNum(levelNum);
+				complete = true;
 			}
 		}
+
+		System.out.println(complete);
 	}
 
 	public static void removeAndAddNames(byte levelNum) {
@@ -427,32 +441,17 @@ public class BoardPrototypeWithFileInput extends Application {
 
 				byte studentNumber = 0;
 
-				/*
-				 * Label studentText = new Label(); String appendTo = "";
-				 */
-
 				for (Student student : level.getStudents()) {
-					// appendTo += (student.getName() + ", ");
+
 					studentNumber++;
 					Label studentLabel = new Label();
-					studentLabel.setText(student.getName() + " " + student.getLocation() + " Level: " + student.getLevelNum());
-					studentLabel.setTranslateX(new Random().nextInt(width / 10) - (studentNumber * 150) + (new Random().nextInt(1000) - 750));
+					studentLabel.setText(
+							student.getName() + " " + student.getLocation() + " Level: " + student.getLevelNum());
+					studentLabel.setTranslateX(new Random().nextInt(width / 10) - (studentNumber * 150)
+							+ (new Random().nextInt(1000) - 750));
 					studentLabel.setTranslateY(new Random().nextInt(height));
 					flowpane.getChildren().add(studentLabel);
 				}
-
-				if (level.getStudents().size() != 0) {
-					/*
-					 * Font textFont = new Font("Times", 300 / level.getStudents().size());
-					 * studentText.setFont(textFont);
-					 */
-				}
-
-				/*
-				 * studentText.setText(appendTo); studentText.setTranslateX(new
-				 * Random().nextInt(2000)); studentText.setTranslateY(new
-				 * Random().nextInt(1000)); flowpane.getChildren().add(studentText);
-				 */
 			}
 		}
 	}
@@ -477,6 +476,7 @@ public class BoardPrototypeWithFileInput extends Application {
 		if (!removedName) {
 			System.out.println("Sorry, no name was found, please check for typos.");
 		}
+
 	}
 
 	public static void addName() {

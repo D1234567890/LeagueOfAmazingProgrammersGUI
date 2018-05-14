@@ -1,5 +1,10 @@
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Random;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -15,14 +20,22 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.scene.text.TextFlow;
+import javafx.scene.text.Text;
+import javafx.scene.image.ImageView;
 
 public class BoardPrototype extends Application {
 
-	private static short width = 800;
-	private static short height = 500;
+	private static FileReader fr;
+	private static BufferedReader br;
+
+	private static short width = 2000;
+	private static short height = 1000;
 
 	private static byte HGap = 2;
 	private static byte VGap = 20;
+
+	private boolean loadedData = false;
 
 	private static boolean ctrlPressed = false;
 	private static boolean altPressed = false;
@@ -74,6 +87,7 @@ public class BoardPrototype extends Application {
 		levelLabel = new Label("The League");
 		levelLabel.setFont(titleFont);
 		unremovableNodes.add(levelLabel);
+		levelLabel.setTranslateX(100);
 
 		flowpane.getChildren().addAll(home, add, remove, change, promote, levelZero, levelOne, levelTwo, levelThree,
 				levelFour, levelFive, levelSix, levelSeven, levelEight, levelNine, levelLabel);
@@ -297,6 +311,78 @@ public class BoardPrototype extends Application {
 				shiftPressed = false;
 			}
 		});
+
+		if (!loadedData) {
+
+			try {
+				fr = new FileReader("src/input_test.txt");
+				br = new BufferedReader(fr);
+				String line = "";
+				String firstName = "";
+				String lastName = "";
+				String locationId = "";
+				while ((line = br.readLine()) != null) {
+					for (int i = 0; i < line.length() - 12; i++) {
+						if (line.substring(i, i + 10).equalsIgnoreCase("first_name")) {
+							i += 13;
+							if (line.substring(i, i + 3).equals("TA-")) {
+								i += 3;
+							}
+							boolean completed = false;
+							while (!completed) {
+								String character = line.substring(i, i + 1);
+								if (character.equals("\""))
+									completed = true;
+								else
+									firstName += character;
+								i++;
+							}
+						}
+						if (line.substring(i, i + 9).equalsIgnoreCase("last_name")) {
+							i += 12;
+							boolean completed = false;
+							while (!completed) {
+								String character = line.substring(i, i + 1);
+								if (character.equals("\""))
+									completed = true;
+								else
+									lastName += character;
+								i++;
+							}
+						}
+						if (line.substring(i, i + 11).equalsIgnoreCase("location_id")) {
+							i += 13;
+							boolean completed = false;
+							while (!completed) {
+								String character = line.substring(i, i + 1);
+								if (character.equals(","))
+									completed = true;
+								else
+									locationId += character;
+								i++;
+							}
+						}
+						if (!(firstName.equals("")) && !(lastName.equals("")) && !(locationId.equals(""))) {
+
+							Random random = new Random();
+							byte randomLevel = (byte) random.nextInt(levels.size());
+							levels.get(randomLevel)
+									.addStudent(new Student(firstName + " " + lastName, locationId, randomLevel));
+
+							firstName = "";
+							lastName = "";
+							locationId = "";
+						}
+					}
+				}
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			loadedData = true;
+		}
 	}
 
 	public static void addLevel(byte levelNum) {
@@ -338,32 +424,64 @@ public class BoardPrototype extends Application {
 
 	public static void removeAndAddNames(byte levelNum) {
 		for (byte i = 0; i < flowpane.getChildren().size(); i++) {
-			if (flowpane.getChildren().get(i) instanceof Label
+			if (flowpane.getChildren().get(i) instanceof TextFlow
 					&& !(unremovableNodes.contains(flowpane.getChildren().get(i)))) {
 				flowpane.getChildren().remove(i);
 				i--;
 			}
 		}
-
+		// TODO: add textflow, imageView, and text
 		for (Level level : levels) {
 			if (level.getLevel() == levelNum) {
 
-				Label studentText = new Label();
-				String appendTo = "";
+				byte studentNumber = 0;
+
+				/*
+				 * Label studentText = new Label(); String appendTo = "";
+				 */
 
 				for (Student student : level.getStudents()) {
-					appendTo += (student.getName() + ", ");
+					// appendTo += (student.getName() + ", ");
+					studentNumber++;
+					TextFlow textFlow = new TextFlow();
+					Text studentName = new Text(student.getName() + " ");
+					Text studentLevel = new Text(" Level: " + student.getLevelNum());
+					// Text studentLocation = new Text(student.getLocation());
+					ImageView studentLocation;
+					if (student.getLocation().equals("22675"))
+						studentLocation = new ImageView("LEAGUE.png");
+					else
+						studentLocation = new ImageView("GompPrep.png");
+					studentLocation.setPreserveRatio(true);
+					studentLocation.setFitHeight(15);
+
+					textFlow.getChildren().addAll(studentName, studentLocation, studentLevel);
+					textFlow.setTranslateX(new Random().nextInt(width / 10) - (studentNumber * 150)
+							+ (new Random().nextInt(1000) - 750));
+					textFlow.setTranslateY(new Random().nextInt(height));
+					flowpane.getChildren().add(textFlow);
+					/*
+					 * Label studentLabel = new Label(); /*studentLabel.setText(student.getName() +
+					 * " " + student.getLocation() + " Level: " + student.getLevelNum());
+					 * /*studentLabel.setTranslateX(new Random().nextInt(width / 10) -
+					 * (studentNumber * 150) + (new Random().nextInt(1000) - 750));
+					 * /*studentLabel.setTranslateY(new Random().nextInt(height));
+					 * /*flowpane.getChildren().add(studentLabel);
+					 */
 				}
 
 				if (level.getStudents().size() != 0) {
-					Font textFont = new Font("Times", 100 / level.getStudents().size());
-					studentText.setFont(textFont);
+					/*
+					 * Font textFont = new Font("Times", 300 / level.getStudents().size());
+					 * studentText.setFont(textFont);
+					 */
 				}
 
-				studentText.setText(appendTo);
-				studentText.setTranslateX(-100);
-				studentText.setTranslateY(100);
-				flowpane.getChildren().add(studentText);
+				/*
+				 * studentText.setText(appendTo); studentText.setTranslateX(new
+				 * Random().nextInt(2000)); studentText.setTranslateY(new
+				 * Random().nextInt(1000)); flowpane.getChildren().add(studentText);
+				 */
 			}
 		}
 	}
