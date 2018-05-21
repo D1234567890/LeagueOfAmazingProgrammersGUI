@@ -19,20 +19,25 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
-public class BoardPrototypeWithFileInput extends Application {
+public class BoardPrototypeFinal extends Application {
 
 	private static FileReader fr;
 	private static BufferedReader br;
 
 	private boolean loadedData = false;
+	private static boolean timerOn = false;
 
 	private static short width = 2000;
 	private static short height = 1000;
 
 	private static byte HGap = 2;
 	private static byte VGap = 20;
+	private static byte levelNum = 0;
 
 	private static boolean ctrlPressed = false;
 	private static boolean altPressed = false;
@@ -43,6 +48,7 @@ public class BoardPrototypeWithFileInput extends Application {
 	private static FlowPane flowpane;
 	private static Label levelLabel;
 	private static Button home, add, remove, change, promote;
+
 	private static Button levelZero, levelOne, levelTwo, levelThree, levelFour, levelFive, levelSix, levelSeven,
 			levelEight, levelNine;
 
@@ -52,10 +58,11 @@ public class BoardPrototypeWithFileInput extends Application {
 	private static ArrayList<Node> unremovableNodes = new ArrayList<Node>();
 
 	public static void main(String[] args) {
-		new BoardPrototypeWithFileInput();
+		new BoardPrototypeFinal();
 		launch(args);
 	}
 
+	@SuppressWarnings("static-access")
 	public void start(Stage alternateStage) throws Exception {
 
 		primaryStage = new Stage();
@@ -63,8 +70,10 @@ public class BoardPrototypeWithFileInput extends Application {
 		flowpane = new FlowPane();
 
 		scene = new Scene(flowpane, width, height);
+		scene.getStylesheets().add("test.css");
 
 		home = new Button("Home");
+
 		add = new Button("Add Name");
 		remove = new Button("Remove Name");
 		change = new Button("Change name");
@@ -85,10 +94,13 @@ public class BoardPrototypeWithFileInput extends Application {
 		levelLabel.setFont(titleFont);
 		unremovableNodes.add(levelLabel);
 
-		flowpane.getChildren().addAll(home, add, remove, change, promote, levelZero, levelOne, levelTwo, levelThree,
-				levelFour, levelFive, levelSix, levelSeven, levelEight, levelNine, levelLabel);
+		flowpane.getChildren().addAll(/*
+										 * home, add, remove, change, promote, levelZero, levelOne, levelTwo,
+										 * levelThree, levelFour, levelFive, levelSix, levelSeven, levelEight,
+										 * levelNine,
+										 */ levelLabel);
 
-		levelLabel.setTranslateX(100);
+		levelLabel.setTranslateX(850);
 
 		flowpane.setPadding(new Insets(20));
 		flowpane.setVgap(VGap);
@@ -113,7 +125,7 @@ public class BoardPrototypeWithFileInput extends Application {
 		add.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				BoardPrototypeWithFileInput.addName();
+				BoardPrototypeFinal.addName();
 			}
 
 		});
@@ -121,7 +133,7 @@ public class BoardPrototypeWithFileInput extends Application {
 		remove.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				BoardPrototypeWithFileInput.removeName();
+				BoardPrototypeFinal.removeName();
 			}
 
 		});
@@ -129,7 +141,7 @@ public class BoardPrototypeWithFileInput extends Application {
 		change.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				BoardPrototypeWithFileInput.changeName();
+				BoardPrototypeFinal.changeName();
 			}
 
 		});
@@ -137,7 +149,7 @@ public class BoardPrototypeWithFileInput extends Application {
 		promote.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				BoardPrototypeWithFileInput.promoteName();
+				BoardPrototypeFinal.promoteName();
 			}
 
 		});
@@ -145,7 +157,7 @@ public class BoardPrototypeWithFileInput extends Application {
 		levelZero.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				BoardPrototypeWithFileInput.removeAndAddNames((byte) 0);
+				BoardPrototypeFinal.removeAndAddNames((byte) 0);
 				flowpane.setStyle("-fx-background: black;");
 				levelLabel.setText("Level 0");
 			}
@@ -154,7 +166,7 @@ public class BoardPrototypeWithFileInput extends Application {
 		levelOne.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				BoardPrototypeWithFileInput.removeAndAddNames((byte) 1);
+				BoardPrototypeFinal.removeAndAddNames((byte) 1);
 				flowpane.setStyle("-fx-background: tan;");
 				levelLabel.setText("Level 1");
 			}
@@ -163,7 +175,7 @@ public class BoardPrototypeWithFileInput extends Application {
 		levelTwo.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				BoardPrototypeWithFileInput.removeAndAddNames((byte) 2);
+				BoardPrototypeFinal.removeAndAddNames((byte) 2);
 				flowpane.setStyle("-fx-background: red;");
 				levelLabel.setText("Level 2");
 			}
@@ -172,7 +184,7 @@ public class BoardPrototypeWithFileInput extends Application {
 		levelThree.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				BoardPrototypeWithFileInput.removeAndAddNames((byte) 3);
+				BoardPrototypeFinal.removeAndAddNames((byte) 3);
 				flowpane.setStyle("-fx-background: orange;");
 				levelLabel.setText("Level 3");
 			}
@@ -181,7 +193,7 @@ public class BoardPrototypeWithFileInput extends Application {
 		levelFour.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				BoardPrototypeWithFileInput.removeAndAddNames((byte) 4);
+				BoardPrototypeFinal.removeAndAddNames((byte) 4);
 				flowpane.setStyle("-fx-background: yellow;");
 				levelLabel.setText("Level 4");
 			}
@@ -190,7 +202,7 @@ public class BoardPrototypeWithFileInput extends Application {
 		levelFive.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				BoardPrototypeWithFileInput.removeAndAddNames((byte) 5);
+				BoardPrototypeFinal.removeAndAddNames((byte) 5);
 				flowpane.setStyle("-fx-background: blue;");
 				levelLabel.setText("Level 5");
 			}
@@ -199,7 +211,7 @@ public class BoardPrototypeWithFileInput extends Application {
 		levelSix.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				BoardPrototypeWithFileInput.removeAndAddNames((byte) 6);
+				BoardPrototypeFinal.removeAndAddNames((byte) 6);
 				flowpane.setStyle("-fx-background: green;");
 				levelLabel.setText("Level 6");
 			}
@@ -208,7 +220,7 @@ public class BoardPrototypeWithFileInput extends Application {
 		levelSeven.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				BoardPrototypeWithFileInput.removeAndAddNames((byte) 7);
+				BoardPrototypeFinal.removeAndAddNames((byte) 7);
 				flowpane.setStyle("-fx-background: purple;");
 				levelLabel.setText("Level 7");
 			}
@@ -217,7 +229,7 @@ public class BoardPrototypeWithFileInput extends Application {
 		levelEight.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				BoardPrototypeWithFileInput.removeAndAddNames((byte) 8);
+				BoardPrototypeFinal.removeAndAddNames((byte) 8);
 				flowpane.setStyle("-fx-background: gray;");
 				levelLabel.setText("Level 8");
 			}
@@ -226,7 +238,7 @@ public class BoardPrototypeWithFileInput extends Application {
 		levelNine.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				BoardPrototypeWithFileInput.removeAndAddNames((byte) 9);
+				BoardPrototypeFinal.removeAndAddNames((byte) 9);
 				flowpane.setStyle("-fx-background: white;");
 				levelLabel.setText("Level 9");
 			}
@@ -235,43 +247,43 @@ public class BoardPrototypeWithFileInput extends Application {
 		scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
 
 			if (key.getCode() == KeyCode.DIGIT0) {
-				BoardPrototypeWithFileInput.removeAndAddNames((byte) 0);
-				flowpane.setStyle("-fx-background: black;");
+				BoardPrototypeFinal.removeAndAddNames((byte) 0);
+				flowpane.setStyle("-fx-background: gray;");
 				levelLabel.setText("Level 0");
 			} else if (key.getCode() == KeyCode.DIGIT1) {
-				BoardPrototypeWithFileInput.removeAndAddNames((byte) 1);
+				BoardPrototypeFinal.removeAndAddNames((byte) 1);
 				flowpane.setStyle("-fx-background: tan;");
 				levelLabel.setText("Level 1");
 			} else if (key.getCode() == KeyCode.DIGIT2) {
-				BoardPrototypeWithFileInput.removeAndAddNames((byte) 2);
+				BoardPrototypeFinal.removeAndAddNames((byte) 2);
 				flowpane.setStyle("-fx-background: red;");
 				levelLabel.setText("Level 2");
 			} else if (key.getCode() == KeyCode.DIGIT3) {
-				BoardPrototypeWithFileInput.removeAndAddNames((byte) 3);
+				BoardPrototypeFinal.removeAndAddNames((byte) 3);
 				flowpane.setStyle("-fx-background: orange;");
 				levelLabel.setText("Level 3");
 			} else if (key.getCode() == KeyCode.DIGIT4) {
-				BoardPrototypeWithFileInput.removeAndAddNames((byte) 4);
+				BoardPrototypeFinal.removeAndAddNames((byte) 4);
 				flowpane.setStyle("-fx-background: yellow;");
 				levelLabel.setText("Level 4");
 			} else if (key.getCode() == KeyCode.DIGIT5) {
-				BoardPrototypeWithFileInput.removeAndAddNames((byte) 5);
+				BoardPrototypeFinal.removeAndAddNames((byte) 5);
 				flowpane.setStyle("-fx-background: blue;");
 				levelLabel.setText("Level 5");
 			} else if (key.getCode() == KeyCode.DIGIT6) {
-				BoardPrototypeWithFileInput.removeAndAddNames((byte) 6);
+				BoardPrototypeFinal.removeAndAddNames((byte) 6);
 				flowpane.setStyle("-fx-background: green;");
 				levelLabel.setText("Level 6");
 			} else if (key.getCode() == KeyCode.DIGIT7) {
-				BoardPrototypeWithFileInput.removeAndAddNames((byte) 7);
+				BoardPrototypeFinal.removeAndAddNames((byte) 7);
 				flowpane.setStyle("-fx-background: purple;");
 				levelLabel.setText("Level 7");
 			} else if (key.getCode() == KeyCode.DIGIT8) {
-				BoardPrototypeWithFileInput.removeAndAddNames((byte) 8);
+				BoardPrototypeFinal.removeAndAddNames((byte) 8);
 				flowpane.setStyle("-fx-background: gray;");
 				levelLabel.setText("Level 8");
 			} else if (key.getCode() == KeyCode.DIGIT9) {
-				BoardPrototypeWithFileInput.removeAndAddNames((byte) 9);
+				BoardPrototypeFinal.removeAndAddNames((byte) 9);
 				flowpane.setStyle("-fx-background: white;");
 				levelLabel.setText("Level 9");
 			}
@@ -286,23 +298,30 @@ public class BoardPrototypeWithFileInput extends Application {
 
 			if (key.getCode() == KeyCode.A && ctrlPressed) {
 				ctrlPressed = false;
-				BoardPrototypeWithFileInput.addName();
+				BoardPrototypeFinal.addName();
 			} else if (key.getCode() == KeyCode.R && ctrlPressed) {
 				ctrlPressed = false;
-				BoardPrototypeWithFileInput.removeName();
+				BoardPrototypeFinal.removeName();
 			} else if (key.getCode() == KeyCode.C && ctrlPressed) {
 				ctrlPressed = false;
-				BoardPrototypeWithFileInput.changeName();
+				BoardPrototypeFinal.changeName();
 			} else if (key.getCode() == KeyCode.P && ctrlPressed) {
 				ctrlPressed = false;
-				BoardPrototypeWithFileInput.promoteName();
+				BoardPrototypeFinal.promoteName();
+			} else if (key.getCode() == KeyCode.N && ctrlPressed) {
+				ctrlPressed = false;
+				timerOn = true;
+				BoardPrototypeFinal.timerController();
+				System.out.println("TIMER");
+			} else if (key.getCode() == KeyCode.F && ctrlPressed) {
+				ctrlPressed = false;
+				timerOn = false;
 			}
 		});
 
 		scene.addEventHandler(KeyEvent.KEY_RELEASED, (key) -> {
 			if (key.getCode() == KeyCode.CONTROL) {
 				ctrlPressed = false;
-				System.out.println("released");
 			} else if (key.getCode() == KeyCode.ALT) {
 				altPressed = false;
 			} else if (key.getCode() == KeyCode.SHIFT) {
@@ -313,65 +332,22 @@ public class BoardPrototypeWithFileInput extends Application {
 		if (!loadedData) {
 
 			try {
+
 				fr = new FileReader("src/student_names.txt");
 				br = new BufferedReader(fr);
-				String line = "";
-				String firstName = "";
-				String lastName = "";
+
+				String line;
+				String firstName;
+				String lastName;
 				String locationId = "";
+				byte level;
+
 				while ((line = br.readLine()) != null) {
-					for (int i = 0; i < line.length() - 12; i++) {
-						if (line.substring(i, i + 10).equalsIgnoreCase("first_name")) {
-							i += 13;
-							if (line.substring(i, i + 3).equals("TA-")) {
-								i += 3;
-							}
-							boolean completed = false;
-							while (!completed) {
-								String character = line.substring(i, i + 1);
-								if (character.equals("\""))
-									completed = true;
-								else
-									firstName += character;
-								i++;
-							}
-						}
-						if (line.substring(i, i + 9).equalsIgnoreCase("last_name")) {
-							i += 12;
-							boolean completed = false;
-							while (!completed) {
-								String character = line.substring(i, i + 1);
-								if (character.equals("\""))
-									completed = true;
-								else
-									lastName += character;
-								i++;
-							}
-						}
-						if (line.substring(i, i + 11).equalsIgnoreCase("location_id")) {
-							i += 13;
-							boolean completed = false;
-							while (!completed) {
-								String character = line.substring(i, i + 1);
-								if (character.equals(","))
-									completed = true;
-								else
-									locationId += character;
-								i++;
-							}
-						}
-						if (!(firstName.equals("")) && !(lastName.equals("")) && !(locationId.equals(""))) {
-
-							Random random = new Random();
-							byte randomLevel = (byte) random.nextInt(levels.size());
-							levels.get(randomLevel)
-									.addStudent(new Student(firstName + " " + lastName, locationId, randomLevel));
-
-							firstName = "";
-							lastName = "";
-							locationId = "";
-						}
-					}
+					firstName = line.substring(0, line.indexOf(' '));
+					lastName = line.substring(line.indexOf(' ') + 1, line.indexOf(','));
+					level = Byte.parseByte(line.substring(line.indexOf(',') + 1, line.indexOf(',') + 2));
+					locationId = line.substring(line.indexOf(',') + 3, line.indexOf(',') + 5);
+					levels.get(level).addStudent(new Student(firstName + " " + lastName, locationId, level));
 				}
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -380,6 +356,81 @@ public class BoardPrototypeWithFileInput extends Application {
 			}
 
 			loadedData = true;
+		}
+	}
+	
+	public static void timerController() {
+		while (timerOn) {
+
+			System.out.println("WHILE");
+			
+			switch (levelNum) {
+			case 0:
+				BoardPrototypeFinal.removeAndAddNames((byte) 1);
+				flowpane.setStyle("-fx-background: tan;");
+				levelLabel.setText("Level 1");
+				levelNum++;
+				break;
+			case 1:
+				BoardPrototypeFinal.removeAndAddNames((byte) 2);
+				flowpane.setStyle("-fx-background: red;");
+				levelLabel.setText("Level 2");
+				levelNum++;
+				break;
+			case 2:
+				BoardPrototypeFinal.removeAndAddNames((byte) 3);
+				flowpane.setStyle("-fx-background: orange;");
+				levelLabel.setText("Level 3");
+				levelNum++;
+				break;
+			case 3:
+				BoardPrototypeFinal.removeAndAddNames((byte) 4);
+				flowpane.setStyle("-fx-background: yellow;");
+				levelLabel.setText("Level 4");
+				levelNum++;
+				break;
+			case 4:
+				BoardPrototypeFinal.removeAndAddNames((byte) 5);
+				flowpane.setStyle("-fx-background: green;");
+				levelLabel.setText("Level 5");
+				levelNum++;
+				break;
+			case 5:
+				BoardPrototypeFinal.removeAndAddNames((byte) 6);
+				flowpane.setStyle("-fx-background: blue;");
+				levelLabel.setText("Level 6");
+				levelNum++;
+				break;
+			case 6:
+				BoardPrototypeFinal.removeAndAddNames((byte) 7);
+				flowpane.setStyle("-fx-background: purple;");
+				levelLabel.setText("Level 7");
+				levelNum++;
+				break;
+			case 7:
+				BoardPrototypeFinal.removeAndAddNames((byte) 8);
+				flowpane.setStyle("-fx-background: gray;");
+				levelLabel.setText("Level 8");
+				levelNum++;
+				break;
+			case 8:
+				BoardPrototypeFinal.removeAndAddNames((byte) 9);
+				flowpane.setStyle("-fx-background: white;");
+				levelLabel.setText("Level 9");
+				levelNum++;
+				break;
+			case 9:
+				BoardPrototypeFinal.removeAndAddNames((byte) 0);
+				flowpane.setStyle("-fx-background: gray;");
+				levelLabel.setText("Level 0");
+				levelNum++;
+				break;
+			}
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -429,7 +480,7 @@ public class BoardPrototypeWithFileInput extends Application {
 
 	public static void removeAndAddNames(byte levelNum) {
 		for (byte i = 0; i < flowpane.getChildren().size(); i++) {
-			if (flowpane.getChildren().get(i) instanceof Label
+			if (flowpane.getChildren().get(i) instanceof TextFlow
 					&& !(unremovableNodes.contains(flowpane.getChildren().get(i)))) {
 				flowpane.getChildren().remove(i);
 				i--;
@@ -437,19 +488,50 @@ public class BoardPrototypeWithFileInput extends Application {
 		}
 
 		for (Level level : levels) {
-			if (level.getLevel() == levelNum) {
 
-				byte studentNumber = 0;
+			if (level.getLevel() == levelNum) {
 
 				for (Student student : level.getStudents()) {
 
-					studentNumber++;
-					Label studentLabel = new Label();
-					studentLabel.setText(
-							student.getName() + " " + student.getLocation() + " Level: " + student.getLevelNum());
-					studentLabel.setTranslateX(new Random().nextInt(width / 10) - (studentNumber * 150)
-							+ (new Random().nextInt(1000) - 750));
-					studentLabel.setTranslateY(new Random().nextInt(height));
+					TextFlow studentLabel = new TextFlow();
+					Text name = new Text(student.getName());
+					name.setId("fancytext");
+					ImageView imageView = new ImageView("LEAGUE.png");
+					studentLabel.getChildren().add(name);
+					final String loc = student.getLocation();
+
+					switch (loc) {
+					case "HH":
+						imageView = new ImageView("HooverHS.jpg");
+						break;
+					case "GP":
+						imageView = new ImageView("GompPrep.png");
+						break;
+					case "CV":
+						imageView = new ImageView("LEAGUE.png");
+						break;
+					case "MX":
+						imageView = new ImageView("MalcomX.png");
+						break;
+					case "SE":
+						imageView = new ImageView("SanElijoMS.png");
+						break;
+					case "SM":
+						imageView = new ImageView("SanMarcosMS.png");
+						break;
+					case "DL":
+						imageView = new ImageView("SDCentral.jpg");
+						break;
+					case "WM":
+						imageView = new ImageView("WilsonMS.jpg");
+						break;
+					}
+
+					imageView.setPreserveRatio(true);
+					imageView.setFitHeight(30);
+					studentLabel.getChildren().add(imageView);
+					studentLabel.setTranslateX(new Random().nextInt(width / 1000));
+					studentLabel.setTranslateY(new Random().nextInt(height / 1));
 					flowpane.getChildren().add(studentLabel);
 				}
 			}
@@ -530,7 +612,7 @@ public class BoardPrototypeWithFileInput extends Application {
 				if (level.getStudents().get(i).getName().equalsIgnoreCase(findName.get())) {
 					level.getStudents().get(i).setName(newName.get());
 					level.getStudents().get(i).setLocation(newLocationOfName.get());
-					BoardPrototypeWithFileInput.changeStudentLevel(level.getStudents().get(i), newLevelNum);
+					BoardPrototypeFinal.changeStudentLevel(level.getStudents().get(i), newLevelNum);
 					i--;
 				}
 			}
@@ -545,8 +627,7 @@ public class BoardPrototypeWithFileInput extends Application {
 		for (Level level : levels) {
 			for (byte i = 0; i < level.getStudents().size(); i++) {
 				if (level.getStudents().get(i).getName().equalsIgnoreCase(findName.get())) {
-					BoardPrototypeWithFileInput.changeStudentLevel(level.getStudents().get(i),
-							(byte) (level.getLevel() + 1));
+					BoardPrototypeFinal.changeStudentLevel(level.getStudents().get(i), (byte) (level.getLevel() + 1));
 					i--;
 				}
 			}
