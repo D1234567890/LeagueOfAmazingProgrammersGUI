@@ -1,3 +1,4 @@
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -6,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Random;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -94,11 +96,7 @@ public class BoardPrototypeFinal extends Application {
 		levelLabel.setFont(titleFont);
 		unremovableNodes.add(levelLabel);
 
-		flowpane.getChildren().addAll(/*
-										 * home, add, remove, change, promote, levelZero, levelOne, levelTwo,
-										 * levelThree, levelFour, levelFive, levelSix, levelSeven, levelEight,
-										 * levelNine,
-										 */ levelLabel);
+		flowpane.getChildren().addAll(levelLabel);
 
 		levelLabel.setTranslateX(850);
 
@@ -227,7 +225,6 @@ public class BoardPrototypeFinal extends Application {
 		});
 
 		levelEight.setOnAction(new EventHandler<ActionEvent>() {
-
 			public void handle(ActionEvent event) {
 				BoardPrototypeFinal.removeAndAddNames((byte) 8);
 				flowpane.setStyle("-fx-background: gray;");
@@ -312,14 +309,15 @@ public class BoardPrototypeFinal extends Application {
 				ctrlPressed = false;
 				timerOn = true;
 				BoardPrototypeFinal.timerController();
-				System.out.println("TIMER");
 			} else if (key.getCode() == KeyCode.F && ctrlPressed) {
 				ctrlPressed = false;
 				timerOn = false;
 			}
 		});
 
-		scene.addEventHandler(KeyEvent.KEY_RELEASED, (key) -> {
+		scene.addEventHandler(KeyEvent.KEY_RELEASED, (key) ->
+
+		{
 			if (key.getCode() == KeyCode.CONTROL) {
 				ctrlPressed = false;
 			} else if (key.getCode() == KeyCode.ALT) {
@@ -358,80 +356,79 @@ public class BoardPrototypeFinal extends Application {
 			loadedData = true;
 		}
 	}
-	
-	public static void timerController() {
-		while (timerOn) {
 
-			System.out.println("WHILE");
-			
-			switch (levelNum) {
-			case 0:
-				BoardPrototypeFinal.removeAndAddNames((byte) 1);
-				flowpane.setStyle("-fx-background: tan;");
-				levelLabel.setText("Level 1");
-				levelNum++;
-				break;
-			case 1:
-				BoardPrototypeFinal.removeAndAddNames((byte) 2);
-				flowpane.setStyle("-fx-background: red;");
-				levelLabel.setText("Level 2");
-				levelNum++;
-				break;
-			case 2:
-				BoardPrototypeFinal.removeAndAddNames((byte) 3);
-				flowpane.setStyle("-fx-background: orange;");
-				levelLabel.setText("Level 3");
-				levelNum++;
-				break;
-			case 3:
-				BoardPrototypeFinal.removeAndAddNames((byte) 4);
-				flowpane.setStyle("-fx-background: yellow;");
-				levelLabel.setText("Level 4");
-				levelNum++;
-				break;
-			case 4:
-				BoardPrototypeFinal.removeAndAddNames((byte) 5);
-				flowpane.setStyle("-fx-background: green;");
-				levelLabel.setText("Level 5");
-				levelNum++;
-				break;
-			case 5:
-				BoardPrototypeFinal.removeAndAddNames((byte) 6);
-				flowpane.setStyle("-fx-background: blue;");
-				levelLabel.setText("Level 6");
-				levelNum++;
-				break;
-			case 6:
-				BoardPrototypeFinal.removeAndAddNames((byte) 7);
-				flowpane.setStyle("-fx-background: purple;");
-				levelLabel.setText("Level 7");
-				levelNum++;
-				break;
-			case 7:
-				BoardPrototypeFinal.removeAndAddNames((byte) 8);
-				flowpane.setStyle("-fx-background: gray;");
-				levelLabel.setText("Level 8");
-				levelNum++;
-				break;
-			case 8:
-				BoardPrototypeFinal.removeAndAddNames((byte) 9);
-				flowpane.setStyle("-fx-background: white;");
-				levelLabel.setText("Level 9");
-				levelNum++;
-				break;
-			case 9:
-				BoardPrototypeFinal.removeAndAddNames((byte) 0);
-				flowpane.setStyle("-fx-background: gray;");
-				levelLabel.setText("Level 0");
-				levelNum++;
-				break;
+	public static void timerController() {
+		new AnimationTimer() {
+			long lastUpdate = 0;
+
+			public void handle(long now) {
+				if (now - lastUpdate >= 2_000_000_000l && timerOn) {
+					switch (levelNum) {
+					case 0:
+						BoardPrototypeFinal.removeAndAddNames((byte) 1);
+						flowpane.setStyle("-fx-background: tan;");
+						levelLabel.setText("Level 1");
+						levelNum++;
+						break;
+					case 1:
+						BoardPrototypeFinal.removeAndAddNames((byte) 2);
+						flowpane.setStyle("-fx-background: red;");
+						levelLabel.setText("Level 2");
+						levelNum++;
+						break;
+					case 2:
+						BoardPrototypeFinal.removeAndAddNames((byte) 3);
+						flowpane.setStyle("-fx-background: orange;");
+						levelLabel.setText("Level 3");
+						levelNum++;
+						break;
+					case 3:
+						BoardPrototypeFinal.removeAndAddNames((byte) 4);
+						flowpane.setStyle("-fx-background: yellow;");
+						levelLabel.setText("Level 4");
+						levelNum++;
+						break;
+					case 4:
+						BoardPrototypeFinal.removeAndAddNames((byte) 5);
+						flowpane.setStyle("-fx-background: green;");
+						levelLabel.setText("Level 5");
+						levelNum++;
+						break;
+					case 5:
+						BoardPrototypeFinal.removeAndAddNames((byte) 6);
+						flowpane.setStyle("-fx-background: blue;");
+						levelLabel.setText("Level 6");
+						levelNum++;
+						break;
+					case 6:
+						BoardPrototypeFinal.removeAndAddNames((byte) 7);
+						flowpane.setStyle("-fx-background: purple;");
+						levelLabel.setText("Level 7");
+						levelNum++;
+						break;
+					case 7:
+						BoardPrototypeFinal.removeAndAddNames((byte) 8);
+						flowpane.setStyle("-fx-background: gray;");
+						levelLabel.setText("Level 8");
+						levelNum++;
+						break;
+					case 8:
+						BoardPrototypeFinal.removeAndAddNames((byte) 9);
+						flowpane.setStyle("-fx-background: white;");
+						levelLabel.setText("Level 9");
+						levelNum++;
+						break;
+					case 9:
+						BoardPrototypeFinal.removeAndAddNames((byte) 0);
+						flowpane.setStyle("-fx-background: gray;");
+						levelLabel.setText("Level 0");
+						levelNum++;
+						break;
+					}
+					lastUpdate = now;
+				}
 			}
-			try {
-				Thread.sleep(10000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		}.start();
 	}
 
 	public static void addLevel(byte levelNum) {
@@ -632,5 +629,9 @@ public class BoardPrototypeFinal extends Application {
 				}
 			}
 		}
+	}
+
+	public void actionPerformed(java.awt.event.ActionEvent e) {
+
 	}
 }
