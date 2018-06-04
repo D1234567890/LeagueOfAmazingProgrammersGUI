@@ -1,11 +1,9 @@
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.Random;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -58,13 +56,13 @@ public class BoardPrototypeFinal extends Application {
 
 	private static ArrayList<Level> levels = new ArrayList<Level>();
 	private static ArrayList<Node> unremovableNodes = new ArrayList<Node>();
+	private static ArrayList<ImageView> images = new ArrayList<ImageView>();
 
 	public static void main(String[] args) {
 		new BoardPrototypeFinal();
 		launch(args);
 	}
 
-	@SuppressWarnings("static-access")
 	public void start(Stage alternateStage) throws Exception {
 
 		primaryStage = new Stage();
@@ -155,134 +153,95 @@ public class BoardPrototypeFinal extends Application {
 		levelZero.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				BoardPrototypeFinal.removeAndAddNames((byte) 0);
-				flowpane.setStyle("-fx-background: black;");
-				levelLabel.setText("Level 0");
+				BoardPrototypeFinal.displayLevel((byte) 0);
 			}
 		});
 
 		levelOne.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				BoardPrototypeFinal.removeAndAddNames((byte) 1);
-				flowpane.setStyle("-fx-background: tan;");
-				levelLabel.setText("Level 1");
+				BoardPrototypeFinal.displayLevel((byte) 1);
 			}
 		});
 
 		levelTwo.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				BoardPrototypeFinal.removeAndAddNames((byte) 2);
-				flowpane.setStyle("-fx-background: red;");
-				levelLabel.setText("Level 2");
+				BoardPrototypeFinal.displayLevel((byte) 2);
 			}
 		});
 
 		levelThree.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				BoardPrototypeFinal.removeAndAddNames((byte) 3);
-				flowpane.setStyle("-fx-background: orange;");
-				levelLabel.setText("Level 3");
+				BoardPrototypeFinal.displayLevel((byte) 3);
 			}
 		});
 
 		levelFour.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				BoardPrototypeFinal.removeAndAddNames((byte) 4);
-				flowpane.setStyle("-fx-background: yellow;");
-				levelLabel.setText("Level 4");
+				BoardPrototypeFinal.displayLevel((byte) 4);
 			}
 		});
 
 		levelFive.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				BoardPrototypeFinal.removeAndAddNames((byte) 5);
-				flowpane.setStyle("-fx-background: blue;");
-				levelLabel.setText("Level 5");
+				BoardPrototypeFinal.displayLevel((byte) 5);
 			}
 		});
 
 		levelSix.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				BoardPrototypeFinal.removeAndAddNames((byte) 6);
-				flowpane.setStyle("-fx-background: green;");
-				levelLabel.setText("Level 6");
+				BoardPrototypeFinal.displayLevel((byte) 6);
+
 			}
 		});
 
 		levelSeven.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				BoardPrototypeFinal.removeAndAddNames((byte) 7);
-				flowpane.setStyle("-fx-background: purple;");
-				levelLabel.setText("Level 7");
+				BoardPrototypeFinal.displayLevel((byte) 7);
 			}
 		});
 
 		levelEight.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
-				BoardPrototypeFinal.removeAndAddNames((byte) 8);
-				flowpane.setStyle("-fx-background: gray;");
-				levelLabel.setText("Level 8");
+				BoardPrototypeFinal.displayLevel((byte) 8);
 			}
 		});
 
 		levelNine.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				BoardPrototypeFinal.removeAndAddNames((byte) 9);
-				flowpane.setStyle("-fx-background: white;");
-				levelLabel.setText("Level 9");
+				BoardPrototypeFinal.displayLevel((byte) 9);
 			}
 		});
 
 		scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
 
 			if (key.getCode() == KeyCode.DIGIT0) {
-				BoardPrototypeFinal.removeAndAddNames((byte) 0);
-				flowpane.setStyle("-fx-background: gray;");
-				levelLabel.setText("Level 0");
+				BoardPrototypeFinal.displayLevel((byte) 0);
 			} else if (key.getCode() == KeyCode.DIGIT1) {
-				BoardPrototypeFinal.removeAndAddNames((byte) 1);
-				flowpane.setStyle("-fx-background: tan;");
-				levelLabel.setText("Level 1");
+				BoardPrototypeFinal.displayLevel((byte) 1);
 			} else if (key.getCode() == KeyCode.DIGIT2) {
-				BoardPrototypeFinal.removeAndAddNames((byte) 2);
-				flowpane.setStyle("-fx-background: red;");
-				levelLabel.setText("Level 2");
+				BoardPrototypeFinal.displayLevel((byte) 2);
 			} else if (key.getCode() == KeyCode.DIGIT3) {
-				BoardPrototypeFinal.removeAndAddNames((byte) 3);
-				flowpane.setStyle("-fx-background: orange;");
-				levelLabel.setText("Level 3");
+				BoardPrototypeFinal.displayLevel((byte) 3);
 			} else if (key.getCode() == KeyCode.DIGIT4) {
-				BoardPrototypeFinal.removeAndAddNames((byte) 4);
-				flowpane.setStyle("-fx-background: yellow;");
-				levelLabel.setText("Level 4");
+				BoardPrototypeFinal.displayLevel((byte) 4);
 			} else if (key.getCode() == KeyCode.DIGIT5) {
-				BoardPrototypeFinal.removeAndAddNames((byte) 5);
-				flowpane.setStyle("-fx-background: blue;");
-				levelLabel.setText("Level 5");
+				BoardPrototypeFinal.displayLevel((byte) 5);
 			} else if (key.getCode() == KeyCode.DIGIT6) {
-				BoardPrototypeFinal.removeAndAddNames((byte) 6);
-				flowpane.setStyle("-fx-background: green;");
-				levelLabel.setText("Level 6");
+				BoardPrototypeFinal.displayLevel((byte) 6);
 			} else if (key.getCode() == KeyCode.DIGIT7) {
-				BoardPrototypeFinal.removeAndAddNames((byte) 7);
-				flowpane.setStyle("-fx-background: purple;");
-				levelLabel.setText("Level 7");
+				BoardPrototypeFinal.displayLevel((byte) 7);
 			} else if (key.getCode() == KeyCode.DIGIT8) {
-				BoardPrototypeFinal.removeAndAddNames((byte) 8);
-				flowpane.setStyle("-fx-background: gray;");
-				levelLabel.setText("Level 8");
+				BoardPrototypeFinal.displayLevel((byte) 8);
 			} else if (key.getCode() == KeyCode.DIGIT9) {
-				BoardPrototypeFinal.removeAndAddNames((byte) 9);
-				flowpane.setStyle("-fx-background: white;");
-				levelLabel.setText("Level 9");
+				BoardPrototypeFinal.displayLevel((byte) 9);
 			}
 
 			if (key.getCode() == KeyCode.CONTROL) {
@@ -363,68 +322,13 @@ public class BoardPrototypeFinal extends Application {
 
 			public void handle(long now) {
 				if (now - lastUpdate >= 2_000_000_000l && timerOn) {
-					switch (levelNum) {
-					case 0:
-						BoardPrototypeFinal.removeAndAddNames((byte) 1);
-						flowpane.setStyle("-fx-background: tan;");
-						levelLabel.setText("Level 1");
+					BoardPrototypeFinal.displayLevel(levelNum);
+					if (levelNum < 9) {
 						levelNum++;
-						break;
-					case 1:
-						BoardPrototypeFinal.removeAndAddNames((byte) 2);
-						flowpane.setStyle("-fx-background: red;");
-						levelLabel.setText("Level 2");
-						levelNum++;
-						break;
-					case 2:
-						BoardPrototypeFinal.removeAndAddNames((byte) 3);
-						flowpane.setStyle("-fx-background: orange;");
-						levelLabel.setText("Level 3");
-						levelNum++;
-						break;
-					case 3:
-						BoardPrototypeFinal.removeAndAddNames((byte) 4);
-						flowpane.setStyle("-fx-background: yellow;");
-						levelLabel.setText("Level 4");
-						levelNum++;
-						break;
-					case 4:
-						BoardPrototypeFinal.removeAndAddNames((byte) 5);
-						flowpane.setStyle("-fx-background: green;");
-						levelLabel.setText("Level 5");
-						levelNum++;
-						break;
-					case 5:
-						BoardPrototypeFinal.removeAndAddNames((byte) 6);
-						flowpane.setStyle("-fx-background: blue;");
-						levelLabel.setText("Level 6");
-						levelNum++;
-						break;
-					case 6:
-						BoardPrototypeFinal.removeAndAddNames((byte) 7);
-						flowpane.setStyle("-fx-background: purple;");
-						levelLabel.setText("Level 7");
-						levelNum++;
-						break;
-					case 7:
-						BoardPrototypeFinal.removeAndAddNames((byte) 8);
-						flowpane.setStyle("-fx-background: gray;");
-						levelLabel.setText("Level 8");
-						levelNum++;
-						break;
-					case 8:
-						BoardPrototypeFinal.removeAndAddNames((byte) 9);
-						flowpane.setStyle("-fx-background: white;");
-						levelLabel.setText("Level 9");
-						levelNum++;
-						break;
-					case 9:
-						BoardPrototypeFinal.removeAndAddNames((byte) 0);
-						flowpane.setStyle("-fx-background: gray;");
-						levelLabel.setText("Level 0");
-						levelNum++;
-						break;
+					} else {
+						levelNum = 0;
 					}
+
 					lastUpdate = now;
 				}
 			}
@@ -458,9 +362,6 @@ public class BoardPrototypeFinal extends Application {
 
 	public static void changeStudentLevel(Student student, byte levelNum) {
 
-		System.out.println("HERE");
-		boolean complete = false;
-
 		for (Level level : levels) {
 			if (level.hasStudent(student)) {
 				level.removeStudent(student);
@@ -468,15 +369,56 @@ public class BoardPrototypeFinal extends Application {
 			if (level.getLevel() == levelNum) {
 				level.addStudent(student);
 				student.setLevelNum(levelNum);
-				complete = true;
 			}
 		}
-
-		System.out.println(complete);
 	}
 
-	public static void removeAndAddNames(byte levelNum) {
-		for (byte i = 0; i < flowpane.getChildren().size(); i++) {
+	public static void displayLevel(byte levelNum) {
+
+		switch (levelNum) {
+		case 0:
+			flowpane.setStyle("-fx-background: gray;");
+			levelLabel.setText("Level 0");
+			break;
+		case 1:
+			flowpane.setStyle("-fx-background: tan;");
+			levelLabel.setText("Level 1");
+			break;
+		case 2:
+			flowpane.setStyle("-fx-background: red;");
+			levelLabel.setText("Level 2");
+			break;
+		case 3:
+			flowpane.setStyle("-fx-background: orange;");
+			levelLabel.setText("Level 3");
+			break;
+		case 4:
+			flowpane.setStyle("-fx-background: yellow;");
+			levelLabel.setText("Level 4");
+			break;
+		case 5:
+			flowpane.setStyle("-fx-background: green;");
+			levelLabel.setText("Level 5");
+			break;
+		case 6:
+			flowpane.setStyle("-fx-background: blue;");
+			levelLabel.setText("Level 6");
+			break;
+		case 7:
+			flowpane.setStyle("-fx-background: purple;");
+			levelLabel.setText("Level 7");
+			break;
+		case 8:
+			flowpane.setStyle("-fx-background: gray;");
+			levelLabel.setText("Level 8");
+			break;
+		case 9:
+			flowpane.setStyle("-fx-background: white;");
+			levelLabel.setText("Level 9");
+			break;
+		}
+
+		for (int i = 0; i < flowpane.getChildren().size(); i++) {
 			if (flowpane.getChildren().get(i) instanceof TextFlow
 					&& !(unremovableNodes.contains(flowpane.getChildren().get(i)))) {
 				flowpane.getChildren().remove(i);
@@ -527,8 +469,7 @@ public class BoardPrototypeFinal extends Application {
 					imageView.setPreserveRatio(true);
 					imageView.setFitHeight(30);
 					studentLabel.getChildren().add(imageView);
-					studentLabel.setTranslateX(new Random().nextInt(width / 1000));
-					studentLabel.setTranslateY(new Random().nextInt(height / 1));
+					studentLabel.setTranslateY(100);
 					flowpane.getChildren().add(studentLabel);
 				}
 			}
@@ -543,7 +484,7 @@ public class BoardPrototypeFinal extends Application {
 		Optional<String> findName = textInputDialog.showAndWait();
 
 		for (Level level : levels) {
-			for (byte i = 0; i < level.getStudents().size(); i++) {
+			for (int i = 0; i < level.getStudents().size(); i++) {
 				if (level.getStudents().get(i).getName().equalsIgnoreCase(findName.get())) {
 					level.removeStudent(level.getStudents().get(i));
 					removedName = true;
@@ -605,7 +546,7 @@ public class BoardPrototypeFinal extends Application {
 		byte newLevelNum = Byte.parseByte(levelOfName.get());
 
 		for (Level level : levels) {
-			for (byte i = 0; i < level.getStudents().size(); i++) {
+			for (int i = 0; i < level.getStudents().size(); i++) {
 				if (level.getStudents().get(i).getName().equalsIgnoreCase(findName.get())) {
 					level.getStudents().get(i).setName(newName.get());
 					level.getStudents().get(i).setLocation(newLocationOfName.get());
@@ -622,16 +563,12 @@ public class BoardPrototypeFinal extends Application {
 		Optional<String> findName = textInputDialog.showAndWait();
 
 		for (Level level : levels) {
-			for (byte i = 0; i < level.getStudents().size(); i++) {
+			for (int i = 0; i < level.getStudents().size(); i++) {
 				if (level.getStudents().get(i).getName().equalsIgnoreCase(findName.get())) {
 					BoardPrototypeFinal.changeStudentLevel(level.getStudents().get(i), (byte) (level.getLevel() + 1));
 					i--;
 				}
 			}
 		}
-	}
-
-	public void actionPerformed(java.awt.event.ActionEvent e) {
-
 	}
 }
