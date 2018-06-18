@@ -1,0 +1,9 @@
+TextFlow {
+    -fx-background-color: white;
+}
+#fancytext {
+    -fx-font: 9pt Tahoma;
+    -fx-fill: black;
+}
+
+					

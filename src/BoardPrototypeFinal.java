@@ -4,17 +4,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
-
-import com.sun.glass.ui.SystemClipboard;
+import java.util.Random;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyCode;
@@ -31,17 +26,21 @@ public class BoardPrototypeFinal extends Application {
 
 	private static FileReader fr;
 	private static BufferedReader br;
+	private static Random r = new Random();
 
-	private boolean loadedData = false;
+	private static boolean loadedData = false;
 	private static boolean timerOn = false;
-	private boolean timerActivatedBefore = false;
+	private static boolean timerActivatedBefore = false;
 
 	private static short width = 2000;
 	private static short height = 1000;
 
 	private static byte HGap = 2;
 	private static byte VGap = 20;
-	private static byte levelNum = 0;
+	private static byte slideCount = 0;
+	private static byte frequency = 3;
+
+	private static int timerWait = 5000;
 
 	private static boolean ctrlPressed = false;
 	private static boolean altPressed = false;
@@ -57,8 +56,8 @@ public class BoardPrototypeFinal extends Application {
 	private static Font titleFont = new Font("Impact", 40);
 
 	private static ArrayList<Level> levels = new ArrayList<Level>();
-	private static ArrayList<Node> unremovableNodes = new ArrayList<Node>();
 	private static ArrayList<Image> logos = new ArrayList<Image>();
+	private static ArrayList<Image> slideImages = new ArrayList<Image>();
 
 	public static void main(String[] args) {
 		new BoardPrototypeFinal();
@@ -66,6 +65,8 @@ public class BoardPrototypeFinal extends Application {
 	}
 
 	public void start(Stage alternateStage) throws Exception {
+
+		primaryStage = new Stage();
 
 		logos.add(new Image("HooverHS.jpg"));
 		logos.add(new Image("GompPrep.png"));
@@ -75,8 +76,15 @@ public class BoardPrototypeFinal extends Application {
 		logos.add(new Image("SanMarcosMS.png"));
 		logos.add(new Image("SDCentral.jpg"));
 		logos.add(new Image("WilsonMS.jpg"));
-
-		primaryStage = new Stage();
+		
+		slideImages.add(new Image("HooverHS.jpg"));
+		slideImages.add(new Image("GompPrep.png"));
+		slideImages.add(new Image("LEAGUE.png"));
+		slideImages.add(new Image("MalcomX.png"));
+		slideImages.add(new Image("SanElijoMS.png"));
+		slideImages.add(new Image("SanMarcosMS.png"));
+		slideImages.add(new Image("SDCentral.jpg"));
+		slideImages.add(new Image("WilsonMS.jpg"));
 
 		labelZero = new Label("Level 0");
 		labelOne = new Label("Level 1");
@@ -99,7 +107,7 @@ public class BoardPrototypeFinal extends Application {
 		labelSeven.setTranslateX(850);
 		labelEight.setTranslateX(850);
 		labelNine.setTranslateX(850);
-		
+
 		labelZero.setFont(titleFont);
 		labelOne.setFont(titleFont);
 		labelTwo.setFont(titleFont);
@@ -153,17 +161,6 @@ public class BoardPrototypeFinal extends Application {
 		flowpane9.setVgap(VGap);
 		flowpane9.setHgap(HGap);
 
-		flowpane0.getChildren().add(labelZero);
-		flowpane1.getChildren().add(labelOne);
-		flowpane2.getChildren().add(labelTwo);
-		flowpane3.getChildren().add(labelThree);
-		flowpane4.getChildren().add(labelFour);
-		flowpane5.getChildren().add(labelFive);
-		flowpane6.getChildren().add(labelSix);
-		flowpane7.getChildren().add(labelSeven);
-		flowpane8.getChildren().add(labelEight);
-		flowpane9.getChildren().add(labelNine);
-		
 		flowpane0.setStyle("-fx-background: gray;");
 		flowpane1.setStyle("-fx-background: tan;");
 		flowpane2.setStyle("-fx-background: red;");
@@ -232,16 +229,16 @@ public class BoardPrototypeFinal extends Application {
 
 			if (key.getCode() == KeyCode.A && ctrlPressed) {
 				ctrlPressed = false;
-				BoardPrototypeFinal.addName();
+				BoardPrototypeFinal.addStudent();
 			} else if (key.getCode() == KeyCode.R && ctrlPressed) {
 				ctrlPressed = false;
-				BoardPrototypeFinal.removeName();
+				BoardPrototypeFinal.removeStudent();
 			} else if (key.getCode() == KeyCode.C && ctrlPressed) {
 				ctrlPressed = false;
-				BoardPrototypeFinal.changeName();
+				BoardPrototypeFinal.changeStudent();
 			} else if (key.getCode() == KeyCode.P && ctrlPressed) {
 				ctrlPressed = false;
-				BoardPrototypeFinal.promoteName();
+				BoardPrototypeFinal.promoteStudent();
 			} else if (key.getCode() == KeyCode.N && ctrlPressed) {
 				if (!timerActivatedBefore)
 					BoardPrototypeFinal.timerController();
@@ -250,6 +247,9 @@ public class BoardPrototypeFinal extends Application {
 			} else if (key.getCode() == KeyCode.F && ctrlPressed) {
 				ctrlPressed = false;
 				timerOn = false;
+			} else if (key.getCode() == KeyCode.S && ctrlPressed) {
+				ctrlPressed = false;
+				BoardPrototypeFinal.addSlide();
 			}
 		});
 
@@ -294,18 +294,145 @@ public class BoardPrototypeFinal extends Application {
 			loadedData = true;
 		}
 
+		BoardPrototypeFinal.updateDisplays();
+	}
+
+	public static void timerController() {
+
+		new AnimationTimer() {
+
+			long millis = System.currentTimeMillis();
+
+			public void handle(long now) {
+
+				if (timerOn) {
+
+					if (System.currentTimeMillis() - millis >= timerWait) {
+
+						millis = System.currentTimeMillis();
+						BoardPrototypeFinal.displayLevel((byte) (slideCount % 9));
+
+						if (slideCount % frequency == 0 && slideImages.size() > 0) {
+							BoardPrototypeFinal.displaySlide(r.nextInt(slideImages.size()));
+						} else if (slideCount % frequency == 1 && slideImages.size() > 0) {
+							BoardPrototypeFinal.updateDisplays();
+						}
+
+						slideCount++;
+					}
+				}
+			}
+		}.start();
+	}
+
+	public static void addSlide() {
+
+		TextInputDialog textInputDialog = new TextInputDialog("IMAGE NAME");
+		Optional<String> imageName = textInputDialog.showAndWait();
+
+		if (!slideImages.contains(new Image(imageName.get()))) {
+			slideImages.add(new Image(imageName.get()));
+		}
+	}
+
+	public static void displaySlide(int randomImage) {
+
+		BoardPrototypeFinal.clearDisplays();
+
+		ImageView imageView = new ImageView();
+		TextFlow textFlow = new TextFlow();
+
+		imageView.setImage(slideImages.get(randomImage));
+		imageView.setPreserveRatio(true);
+		imageView.setFitHeight(800);
+		textFlow.setTranslateX(550);
+		textFlow.setTranslateY(50);
+		textFlow.getChildren().add(imageView);
+
+		flowpane0.getChildren().add(textFlow);
+		scene.setRoot(flowpane0);
+
+	}
+
+	public static void displayLevel(byte levelNum) {
+
+		switch (levelNum) {
+		case 0:
+			scene.setRoot(flowpane0);
+			break;
+		case 1:
+			scene.setRoot(flowpane1);
+			break;
+		case 2:
+			scene.setRoot(flowpane2);
+			break;
+		case 3:
+			scene.setRoot(flowpane3);
+			break;
+		case 4:
+			scene.setRoot(flowpane4);
+			break;
+		case 5:
+			scene.setRoot(flowpane5);
+			break;
+		case 6:
+			scene.setRoot(flowpane6);
+			break;
+		case 7:
+			scene.setRoot(flowpane7);
+			break;
+		case 8:
+			scene.setRoot(flowpane8);
+			break;
+		case 9:
+			scene.setRoot(flowpane9);
+			break;
+		}
+	}
+
+	public static void clearDisplays() {
+
+		flowpane0.getChildren().clear();
+		flowpane1.getChildren().clear();
+		flowpane2.getChildren().clear();
+		flowpane3.getChildren().clear();
+		flowpane4.getChildren().clear();
+		flowpane5.getChildren().clear();
+		flowpane6.getChildren().clear();
+		flowpane7.getChildren().clear();
+		flowpane8.getChildren().clear();
+		flowpane9.getChildren().clear();
+
+	}
+
+	public static void updateDisplays() {
+
+		BoardPrototypeFinal.clearDisplays();
+
+		flowpane0.getChildren().add(labelZero);
+		flowpane1.getChildren().add(labelOne);
+		flowpane2.getChildren().add(labelTwo);
+		flowpane3.getChildren().add(labelThree);
+		flowpane4.getChildren().add(labelFour);
+		flowpane5.getChildren().add(labelFive);
+		flowpane6.getChildren().add(labelSix);
+		flowpane7.getChildren().add(labelSeven);
+		flowpane8.getChildren().add(labelEight);
+		flowpane9.getChildren().add(labelNine);
+
 		for (byte i = 0; i < levels.size(); i++) {
 
 			for (Student student : levels.get(i).getStudents()) {
 
 				TextFlow studentLabel = new TextFlow();
 				Text name = new Text(student.getName());
-				name.setId("fancytext");
 				ImageView imageView = new ImageView("LEAGUE.png");
-				studentLabel.getChildren().add(name);
-				final String loc = student.getLocation();
 
-				switch (loc) {
+				final String location = student.getLocation();
+				name.setId("fancytext");
+				studentLabel.getChildren().add(name);
+
+				switch (location) {
 				case "HH":
 					imageView.setImage(logos.get(0));
 					break;
@@ -373,51 +500,6 @@ public class BoardPrototypeFinal extends Application {
 		}
 	}
 
-	public static void timerController() {
-		new AnimationTimer() {
-			long millis = System.currentTimeMillis();
-
-			public void handle(long now) {
-				if (timerOn) {
-					if (System.currentTimeMillis() - millis >= 10000) {
-						millis = System.currentTimeMillis();
-						BoardPrototypeFinal.displayLevel(levelNum);
-						if (levelNum < 9) {
-							levelNum++;
-						} else {
-							levelNum = 0;
-						}
-					}
-				}
-			}
-		}.start();
-	}
-
-	public static void addLevel(byte levelNum) {
-
-		boolean containsLevel = false;
-
-		for (Level level : levels) {
-			if (level.getLevel() == levelNum) {
-				containsLevel = true;
-			}
-		}
-
-		if (!containsLevel) {
-			levels.add(new Level(levelNum));
-		} else {
-			System.out.println("There already exists a class with that level number!");
-		}
-	}
-
-	public static void removeLevel(byte levelNum) {
-		for (Level level : levels) {
-			if (level.getLevel() == levelNum) {
-				levels.remove(level);
-			}
-		}
-	}
-
 	public static void changeStudentLevel(Student student, byte levelNum) {
 
 		for (Level level : levels) {
@@ -429,45 +511,11 @@ public class BoardPrototypeFinal extends Application {
 				student.setLevelNum(levelNum);
 			}
 		}
+
+		BoardPrototypeFinal.updateDisplays();
 	}
 
-	public static void displayLevel(byte levelNum) {
-
-		switch (levelNum) {
-		case 0:
-			scene.setRoot(flowpane0);
-			break;
-		case 1:
-			scene.setRoot(flowpane1);
-			break;
-		case 2:
-			scene.setRoot(flowpane2);
-			break;
-		case 3:
-			scene.setRoot(flowpane3);
-			break;
-		case 4:
-			scene.setRoot(flowpane4);
-			break;
-		case 5:
-			scene.setRoot(flowpane5);
-			break;
-		case 6:
-			scene.setRoot(flowpane6);
-			break;
-		case 7:
-			scene.setRoot(flowpane7);
-			break;
-		case 8:
-			scene.setRoot(flowpane8);
-			break;
-		case 9:
-			scene.setRoot(flowpane9);
-			break;
-		}
-	}
-
-	public static void removeName() {
+	public static void removeStudent() {
 
 		boolean removedName = false;
 
@@ -488,9 +536,10 @@ public class BoardPrototypeFinal extends Application {
 			System.out.println("Sorry, no name was found, please check for typos.");
 		}
 
+		BoardPrototypeFinal.updateDisplays();
 	}
 
-	public static void addName() {
+	public static void addStudent() {
 
 		boolean containsLevel = false;
 
@@ -519,9 +568,11 @@ public class BoardPrototypeFinal extends Application {
 				}
 			}
 		}
+
+		BoardPrototypeFinal.updateDisplays();
 	}
 
-	public static void changeName() {
+	public static void changeStudent() {
 
 		TextInputDialog textInputDialog = new TextInputDialog("FIND NAME");
 		Optional<String> findName = textInputDialog.showAndWait();
@@ -546,9 +597,11 @@ public class BoardPrototypeFinal extends Application {
 				}
 			}
 		}
+
+		BoardPrototypeFinal.updateDisplays();
 	}
 
-	public static void promoteName() {
+	public static void promoteStudent() {
 
 		TextInputDialog textInputDialog = new TextInputDialog("FIND NAME");
 		Optional<String> findName = textInputDialog.showAndWait();
@@ -561,5 +614,7 @@ public class BoardPrototypeFinal extends Application {
 				}
 			}
 		}
+
+		BoardPrototypeFinal.updateDisplays();
 	}
 }
