@@ -37,19 +37,20 @@ public class BoardPrototypeFinal extends Application {
 
 	private static byte HGap = 2;
 	private static byte VGap = 20;
-	private static byte slideCount = 0;
-	private static byte frequency = 3;
+	private static byte frequency = 5;
 
-	private static int timerWait = 5000;
+	private static int timerWait = 15000;
+	private static int slideCount = 0;
+	private static int offset = 0;
 
 	private static boolean ctrlPressed = false;
-	private static boolean altPressed = false;
-	private static boolean shiftPressed = false;
 
 	private static Stage primaryStage;
 	private static Scene scene;
+
 	private static FlowPane flowpane0, flowpane1, flowpane2, flowpane3, flowpane4, flowpane5, flowpane6, flowpane7,
 			flowpane8, flowpane9;
+
 	private static Label labelZero, labelOne, labelTwo, labelThree, labelFour, labelFive, labelSix, labelSeven,
 			labelEight, labelNine;
 
@@ -66,8 +67,6 @@ public class BoardPrototypeFinal extends Application {
 
 	public void start(Stage alternateStage) throws Exception {
 
-		primaryStage = new Stage();
-
 		logos.add(new Image("HooverHS.jpg"));
 		logos.add(new Image("GompPrep.png"));
 		logos.add(new Image("LEAGUE.png"));
@@ -76,7 +75,7 @@ public class BoardPrototypeFinal extends Application {
 		logos.add(new Image("SanMarcosMS.png"));
 		logos.add(new Image("SDCentral.jpg"));
 		logos.add(new Image("WilsonMS.jpg"));
-		
+
 		slideImages.add(new Image("HooverHS.jpg"));
 		slideImages.add(new Image("GompPrep.png"));
 		slideImages.add(new Image("LEAGUE.png"));
@@ -85,6 +84,8 @@ public class BoardPrototypeFinal extends Application {
 		slideImages.add(new Image("SanMarcosMS.png"));
 		slideImages.add(new Image("SDCentral.jpg"));
 		slideImages.add(new Image("WilsonMS.jpg"));
+
+		primaryStage = new Stage();
 
 		labelZero = new Label("Level 0");
 		labelOne = new Label("Level 1");
@@ -221,10 +222,6 @@ public class BoardPrototypeFinal extends Application {
 
 			if (key.getCode() == KeyCode.CONTROL) {
 				ctrlPressed = true;
-			} else if (key.getCode() == KeyCode.ALT) {
-				altPressed = true;
-			} else if (key.getCode() == KeyCode.SHIFT) {
-				shiftPressed = true;
 			}
 
 			if (key.getCode() == KeyCode.A && ctrlPressed) {
@@ -240,8 +237,11 @@ public class BoardPrototypeFinal extends Application {
 				ctrlPressed = false;
 				BoardPrototypeFinal.promoteStudent();
 			} else if (key.getCode() == KeyCode.N && ctrlPressed) {
-				if (!timerActivatedBefore)
+				
+				if (!timerActivatedBefore) {
 					BoardPrototypeFinal.timerController();
+				}
+				
 				ctrlPressed = false;
 				timerOn = true;
 			} else if (key.getCode() == KeyCode.F && ctrlPressed) {
@@ -258,10 +258,6 @@ public class BoardPrototypeFinal extends Application {
 		{
 			if (key.getCode() == KeyCode.CONTROL) {
 				ctrlPressed = false;
-			} else if (key.getCode() == KeyCode.ALT) {
-				altPressed = false;
-			} else if (key.getCode() == KeyCode.SHIFT) {
-				shiftPressed = false;
 			}
 		});
 
@@ -310,10 +306,11 @@ public class BoardPrototypeFinal extends Application {
 					if (System.currentTimeMillis() - millis >= timerWait) {
 
 						millis = System.currentTimeMillis();
-						BoardPrototypeFinal.displayLevel((byte) (slideCount % 9));
+						BoardPrototypeFinal.displayLevel((byte) ((byte) ((slideCount - offset) % 10)));
 
 						if (slideCount % frequency == 0 && slideImages.size() > 0) {
 							BoardPrototypeFinal.displaySlide(r.nextInt(slideImages.size()));
+							offset++;
 						} else if (slideCount % frequency == 1 && slideImages.size() > 0) {
 							BoardPrototypeFinal.updateDisplays();
 						}

@@ -23,6 +23,7 @@ public class Level {
 	}
 
 	public boolean hasStudent(Student student) {
+		
 		if (students.contains(student)) {
 			return true;
 		} else {
