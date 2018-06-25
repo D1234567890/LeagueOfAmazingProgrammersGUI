@@ -32,14 +32,14 @@ public class BoardPrototypeFinal extends Application {
 	private static boolean timerOn = false;
 	private static boolean timerActivatedBefore = false;
 
-	private static short width = 2000;
+	private static short width = 10000;
 	private static short height = 1000;
 
 	private static byte HGap = 2;
 	private static byte VGap = 20;
 	private static byte frequency = 5;
 
-	private static int timerWait = 15000;
+	private static int timerWait = 2000;
 	private static int slideCount = 0;
 	private static int offset = 0;
 
@@ -49,7 +49,7 @@ public class BoardPrototypeFinal extends Application {
 	private static Scene scene;
 
 	private static FlowPane flowpane0, flowpane1, flowpane2, flowpane3, flowpane4, flowpane5, flowpane6, flowpane7,
-			flowpane8, flowpane9;
+			flowpane8, flowpane9, flowpaneImage;
 
 	private static Label labelZero, labelOne, labelTwo, labelThree, labelFour, labelFive, labelSix, labelSeven,
 			labelEight, labelNine;
@@ -130,6 +130,7 @@ public class BoardPrototypeFinal extends Application {
 		flowpane7 = new FlowPane();
 		flowpane8 = new FlowPane();
 		flowpane9 = new FlowPane();
+		flowpaneImage = new FlowPane();
 
 		flowpane0.setPadding(new Insets(20));
 		flowpane0.setVgap(VGap);
@@ -161,6 +162,9 @@ public class BoardPrototypeFinal extends Application {
 		flowpane9.setPadding(new Insets(20));
 		flowpane9.setVgap(VGap);
 		flowpane9.setHgap(HGap);
+		flowpaneImage.setPadding(new Insets(20));
+		flowpaneImage.setVgap(VGap);
+		flowpaneImage.setHgap(HGap);
 
 		flowpane0.setStyle("-fx-background: gray;");
 		flowpane1.setStyle("-fx-background: tan;");
@@ -311,8 +315,8 @@ public class BoardPrototypeFinal extends Application {
 						if (slideCount % frequency == 0 && slideImages.size() > 0) {
 							BoardPrototypeFinal.displaySlide(r.nextInt(slideImages.size()));
 							offset++;
-						} else if (slideCount % frequency == 1 && slideImages.size() > 0) {
-							BoardPrototypeFinal.updateDisplays();
+						} else if (slideCount % frequency == 1) {
+							flowpaneImage.getChildren().clear();
 						}
 
 						slideCount++;
@@ -334,8 +338,6 @@ public class BoardPrototypeFinal extends Application {
 
 	public static void displaySlide(int randomImage) {
 
-		BoardPrototypeFinal.clearDisplays();
-
 		ImageView imageView = new ImageView();
 		TextFlow textFlow = new TextFlow();
 
@@ -346,8 +348,8 @@ public class BoardPrototypeFinal extends Application {
 		textFlow.setTranslateY(50);
 		textFlow.getChildren().add(imageView);
 
-		flowpane0.getChildren().add(textFlow);
-		scene.setRoot(flowpane0);
+		flowpaneImage.getChildren().add(textFlow);
+		scene.setRoot(flowpaneImage);
 
 	}
 
