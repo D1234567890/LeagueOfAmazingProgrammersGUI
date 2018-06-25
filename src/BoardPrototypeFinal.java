@@ -1,3 +1,4 @@
+import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -27,17 +28,20 @@ public class BoardPrototypeFinal extends Application {
 	private static FileReader fr;
 	private static BufferedReader br;
 	private static Random r = new Random();
+	private static Toolkit toolkit = Toolkit.getDefaultToolkit();
 
 	private static boolean loadedData = false;
 	private static boolean timerOn = false;
 	private static boolean timerActivatedBefore = false;
 
-	private static short width = 10000;
-	private static short height = 1000;
+	private static short width = (short) toolkit.getScreenSize().getWidth();
+	private static short height = (short) toolkit.getScreenSize().getHeight();
 
 	private static byte HGap = 2;
 	private static byte VGap = 20;
 	private static byte frequency = 5;
+	
+	private static short translateX = 585;
 
 	private static int timerWait = 2000;
 	private static int slideCount = 0;
@@ -98,16 +102,16 @@ public class BoardPrototypeFinal extends Application {
 		labelEight = new Label("Level 8");
 		labelNine = new Label("Level 9");
 
-		labelZero.setTranslateX(850);
-		labelOne.setTranslateX(850);
-		labelTwo.setTranslateX(850);
-		labelThree.setTranslateX(850);
-		labelFour.setTranslateX(850);
-		labelFive.setTranslateX(850);
-		labelSix.setTranslateX(850);
-		labelSeven.setTranslateX(850);
-		labelEight.setTranslateX(850);
-		labelNine.setTranslateX(850);
+		labelZero.setTranslateX(translateX);
+		labelOne.setTranslateX(translateX);
+		labelTwo.setTranslateX(translateX);
+		labelThree.setTranslateX(translateX);
+		labelFour.setTranslateX(translateX);
+		labelFive.setTranslateX(translateX);
+		labelSix.setTranslateX(translateX);
+		labelSeven.setTranslateX(translateX);
+		labelEight.setTranslateX(translateX);
+		labelNine.setTranslateX(translateX);
 
 		labelZero.setFont(titleFont);
 		labelOne.setFont(titleFont);
@@ -343,9 +347,8 @@ public class BoardPrototypeFinal extends Application {
 
 		imageView.setImage(slideImages.get(randomImage));
 		imageView.setPreserveRatio(true);
-		imageView.setFitHeight(800);
-		textFlow.setTranslateX(550);
-		textFlow.setTranslateY(50);
+		imageView.setFitHeight(500);
+		textFlow.setTranslateX(475);
 		textFlow.getChildren().add(imageView);
 
 		flowpaneImage.getChildren().add(textFlow);
