@@ -420,6 +420,72 @@ public class Display extends Application {
 		flowpane8.getChildren().clear();
 		flowpane9.getChildren().clear();
 	}
+	
+	public static void keyBuilder() {
+		
+		TextFlow key1 = new TextFlow();
+		TextFlow key2 = new TextFlow();
+		TextFlow key3 = new TextFlow();
+		TextFlow key4 = new TextFlow();
+		TextFlow key5 = new TextFlow();
+		TextFlow key6 = new TextFlow();
+		TextFlow key7 = new TextFlow();
+		TextFlow key8 = new TextFlow();
+		
+		Text labelForKey1 = new Text("The League");
+		Text labelForKey2 = new Text("San Diego Central");
+		Text labelForKey3 = new Text("Malcolm X Library");
+		Text labelForKey4 = new Text("Hoover High School");
+		Text labelForKey5 = new Text("Gompers Prep Middle School");
+		Text labelForKey6 = new Text("San Elijo Middle School");
+		Text labelForKey7 = new Text("Wilson Middle School");
+		Text labelForKey8 = new Text("San Marcos Middle School");
+		
+		ImageView imageForKey1 = new ImageView();
+		ImageView imageForKey2 = new ImageView();
+		ImageView imageForKey3 = new ImageView();
+		ImageView imageForKey4 = new ImageView();
+		ImageView imageForKey5 = new ImageView();
+		ImageView imageForKey6 = new ImageView();
+		ImageView imageForKey7 = new ImageView();
+		ImageView imageForKey8 = new ImageView();
+		
+		imageForKey1.setPreserveRatio(true);
+		imageForKey2.setPreserveRatio(true);
+		imageForKey3.setPreserveRatio(true);
+		imageForKey4.setPreserveRatio(true);
+		imageForKey5.setPreserveRatio(true);
+		imageForKey6.setPreserveRatio(true);
+		imageForKey7.setPreserveRatio(true);
+		imageForKey8.setPreserveRatio(true);
+		
+		imageForKey1.setFitHeight(30);
+		imageForKey2.setFitHeight(30);
+		imageForKey3.setFitHeight(30);
+		imageForKey4.setFitHeight(30);
+		imageForKey5.setFitHeight(30);
+		imageForKey6.setFitHeight(30);
+		imageForKey7.setFitHeight(30);
+		imageForKey8.setFitHeight(30);
+		
+		imageForKey1.setImage(logos.get(2));
+		imageForKey2.setImage(logos.get(6));
+		imageForKey3.setImage(logos.get(3));
+		imageForKey4.setImage(logos.get(0));
+		imageForKey5.setImage(logos.get(1));
+		imageForKey6.setImage(logos.get(4));
+		imageForKey7.setImage(logos.get(7));
+		imageForKey8.setImage(logos.get(5));
+		
+		key1.getChildren().addAll(imageForKey1, labelForKey1);
+		key2.getChildren().addAll(imageForKey2, labelForKey2);
+		key3.getChildren().addAll(imageForKey3, labelForKey3);
+		key4.getChildren().addAll(imageForKey4, labelForKey4);
+		key5.getChildren().addAll(imageForKey5, labelForKey5);
+		key6.getChildren().addAll(imageForKey6, labelForKey6);
+		key7.getChildren().addAll(imageForKey7, labelForKey7);
+		key8.getChildren().addAll(imageForKey8, labelForKey8);
+	}
 
 	public static void updateDisplays() {
 
@@ -479,7 +545,7 @@ public class Display extends Application {
 				imageView.setFitHeight(30);
 				studentLabel.getChildren().add(imageView);
 				studentLabel.setTranslateY(100);
-
+				
 				switch (i) {
 				case 0:
 					flowpane0.getChildren().add(studentLabel);
