@@ -23,16 +23,23 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-public class BoardPrototypeFinal extends Application {
+public class Display extends Application {
 
+	// Class References
+
+	private static Toolkit toolkit = Toolkit.getDefaultToolkit();
+
+	private static TextInputDialog textInputDialog;
 	private static FileReader fr;
 	private static BufferedReader br;
-	private static Random r = new Random();
-	private static Toolkit toolkit = Toolkit.getDefaultToolkit();
+	private static Random r;
+
+	// Primitives
 
 	private static boolean loadedData = false;
 	private static boolean timerOn = false;
 	private static boolean timerActivatedBefore = false;
+	private static boolean ctrlPressed = false;
 
 	private static short width = (short) toolkit.getScreenSize().getWidth();
 	private static short height = (short) toolkit.getScreenSize().getHeight();
@@ -40,23 +47,25 @@ public class BoardPrototypeFinal extends Application {
 	private static byte HGap = 2;
 	private static byte VGap = 20;
 	private static byte frequency = 5;
-	
-	private static short translateX = 585;
 
-	private static int timerWait = 2000;
+	private static short translateX = (short) ((toolkit.getScreenSize().getWidth() / 2) - 75);
+
+	private static int timerWait = 10000;
 	private static int slideCount = 0;
-	private static int offset = 0;
+	private static int slideOffset = 0;
 
-	private static boolean ctrlPressed = false;
+	// Java FX References
 
 	private static Stage primaryStage;
 	private static Scene scene;
-
+	
 	private static FlowPane flowpane0, flowpane1, flowpane2, flowpane3, flowpane4, flowpane5, flowpane6, flowpane7,
 			flowpane8, flowpane9, flowpaneImage;
-
+	
 	private static Label labelZero, labelOne, labelTwo, labelThree, labelFour, labelFive, labelSix, labelSeven,
 			labelEight, labelNine;
+
+	// Miscellaneous
 
 	private static Font titleFont = new Font("Impact", 40);
 
@@ -65,11 +74,14 @@ public class BoardPrototypeFinal extends Application {
 	private static ArrayList<Image> slideImages = new ArrayList<Image>();
 
 	public static void main(String[] args) {
-		new BoardPrototypeFinal();
+		
+		new Display();
 		launch(args);
 	}
 
 	public void start(Stage alternateStage) throws Exception {
+
+		// Startup Code
 
 		logos.add(new Image("HooverHS.jpg"));
 		logos.add(new Image("GompPrep.png"));
@@ -198,34 +210,37 @@ public class BoardPrototypeFinal extends Application {
 		levels.add(new Level((byte) 8));
 		levels.add(new Level((byte) 9));
 
+		// Automatic Timer Activation
+
 		if (!timerActivatedBefore) {
-			BoardPrototypeFinal.timerController();
+			Display.timerController();
+			timerOn = true;
 		}
 
-		timerOn = true;
+		// Keyboard Shortcuts
 
 		scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
 
 			if (key.getCode() == KeyCode.DIGIT0) {
-				BoardPrototypeFinal.displayLevel((byte) 0);
+				Display.displayLevelSlide((byte) 0);
 			} else if (key.getCode() == KeyCode.DIGIT1) {
-				BoardPrototypeFinal.displayLevel((byte) 1);
+				Display.displayLevelSlide((byte) 1);
 			} else if (key.getCode() == KeyCode.DIGIT2) {
-				BoardPrototypeFinal.displayLevel((byte) 2);
+				Display.displayLevelSlide((byte) 2);
 			} else if (key.getCode() == KeyCode.DIGIT3) {
-				BoardPrototypeFinal.displayLevel((byte) 3);
+				Display.displayLevelSlide((byte) 3);
 			} else if (key.getCode() == KeyCode.DIGIT4) {
-				BoardPrototypeFinal.displayLevel((byte) 4);
+				Display.displayLevelSlide((byte) 4);
 			} else if (key.getCode() == KeyCode.DIGIT5) {
-				BoardPrototypeFinal.displayLevel((byte) 5);
+				Display.displayLevelSlide((byte) 5);
 			} else if (key.getCode() == KeyCode.DIGIT6) {
-				BoardPrototypeFinal.displayLevel((byte) 6);
+				Display.displayLevelSlide((byte) 6);
 			} else if (key.getCode() == KeyCode.DIGIT7) {
-				BoardPrototypeFinal.displayLevel((byte) 7);
+				Display.displayLevelSlide((byte) 7);
 			} else if (key.getCode() == KeyCode.DIGIT8) {
-				BoardPrototypeFinal.displayLevel((byte) 8);
+				Display.displayLevelSlide((byte) 8);
 			} else if (key.getCode() == KeyCode.DIGIT9) {
-				BoardPrototypeFinal.displayLevel((byte) 9);
+				Display.displayLevelSlide((byte) 9);
 			}
 
 			if (key.getCode() == KeyCode.CONTROL) {
@@ -234,20 +249,17 @@ public class BoardPrototypeFinal extends Application {
 
 			if (key.getCode() == KeyCode.A && ctrlPressed) {
 				ctrlPressed = false;
-				BoardPrototypeFinal.addStudent();
+				Display.addStudent();
 			} else if (key.getCode() == KeyCode.R && ctrlPressed) {
 				ctrlPressed = false;
-				BoardPrototypeFinal.removeStudent();
+				Display.removeStudent();
 			} else if (key.getCode() == KeyCode.C && ctrlPressed) {
 				ctrlPressed = false;
-				BoardPrototypeFinal.changeStudent();
-			} else if (key.getCode() == KeyCode.P && ctrlPressed) {
-				ctrlPressed = false;
-				BoardPrototypeFinal.promoteStudent();
+				Display.changeStudent();
 			} else if (key.getCode() == KeyCode.N && ctrlPressed) {
-				
+
 				if (!timerActivatedBefore) {
-					BoardPrototypeFinal.timerController();
+					Display.timerController();
 				}
 				
 				ctrlPressed = false;
@@ -257,7 +269,7 @@ public class BoardPrototypeFinal extends Application {
 				timerOn = false;
 			} else if (key.getCode() == KeyCode.S && ctrlPressed) {
 				ctrlPressed = false;
-				BoardPrototypeFinal.addSlide();
+				Display.addImageSlide();
 			}
 		});
 
@@ -268,6 +280,8 @@ public class BoardPrototypeFinal extends Application {
 				ctrlPressed = false;
 			}
 		});
+
+		// Reading File Data
 
 		if (!loadedData) {
 
@@ -298,7 +312,7 @@ public class BoardPrototypeFinal extends Application {
 			loadedData = true;
 		}
 
-		BoardPrototypeFinal.updateDisplays();
+		Display.updateDisplays();
 	}
 
 	public static void timerController() {
@@ -313,12 +327,14 @@ public class BoardPrototypeFinal extends Application {
 
 					if (System.currentTimeMillis() - millis >= timerWait) {
 
+						r = new Random();
+
 						millis = System.currentTimeMillis();
-						BoardPrototypeFinal.displayLevel((byte) ((byte) ((slideCount - offset) % 10)));
+						Display.displayLevelSlide((byte) ((byte) ((slideCount - slideOffset) % 10)));
 
 						if (slideCount % frequency == 0 && slideImages.size() > 0) {
-							BoardPrototypeFinal.displaySlide(r.nextInt(slideImages.size()));
-							offset++;
+							Display.displayImageSlide(r.nextInt(slideImages.size()));
+							slideOffset++;
 						} else if (slideCount % frequency == 1) {
 							flowpaneImage.getChildren().clear();
 						}
@@ -330,9 +346,9 @@ public class BoardPrototypeFinal extends Application {
 		}.start();
 	}
 
-	public static void addSlide() {
+	public static void addImageSlide() {
 
-		TextInputDialog textInputDialog = new TextInputDialog("IMAGE NAME");
+		textInputDialog = new TextInputDialog("IMAGE NAME");
 		Optional<String> imageName = textInputDialog.showAndWait();
 
 		if (!slideImages.contains(new Image(imageName.get()))) {
@@ -340,15 +356,14 @@ public class BoardPrototypeFinal extends Application {
 		}
 	}
 
-	public static void displaySlide(int randomImage) {
+	public static void displayImageSlide(int randomImage) {
 
 		ImageView imageView = new ImageView();
 		TextFlow textFlow = new TextFlow();
 
 		imageView.setImage(slideImages.get(randomImage));
 		imageView.setPreserveRatio(true);
-		imageView.setFitHeight(500);
-		textFlow.setTranslateX(475);
+		imageView.setFitHeight(900);
 		textFlow.getChildren().add(imageView);
 
 		flowpaneImage.getChildren().add(textFlow);
@@ -356,7 +371,7 @@ public class BoardPrototypeFinal extends Application {
 
 	}
 
-	public static void displayLevel(byte levelNum) {
+	public static void displayLevelSlide(byte levelNum) {
 
 		switch (levelNum) {
 		case 0:
@@ -404,12 +419,11 @@ public class BoardPrototypeFinal extends Application {
 		flowpane7.getChildren().clear();
 		flowpane8.getChildren().clear();
 		flowpane9.getChildren().clear();
-
 	}
 
 	public static void updateDisplays() {
 
-		BoardPrototypeFinal.clearDisplays();
+		Display.clearDisplays();
 
 		flowpane0.getChildren().add(labelZero);
 		flowpane1.getChildren().add(labelOne);
@@ -431,7 +445,7 @@ public class BoardPrototypeFinal extends Application {
 				ImageView imageView = new ImageView("LEAGUE.png");
 
 				final String location = student.getLocation();
-				name.setId("fancytext");
+				name.setId("textfont");
 				studentLabel.getChildren().add(name);
 
 				switch (location) {
@@ -514,14 +528,14 @@ public class BoardPrototypeFinal extends Application {
 			}
 		}
 
-		BoardPrototypeFinal.updateDisplays();
+		Display.updateDisplays();
 	}
 
 	public static void removeStudent() {
 
 		boolean removedName = false;
 
-		TextInputDialog textInputDialog = new TextInputDialog("FIND NAME");
+		textInputDialog = new TextInputDialog("FIND STUDENT (ENTER FULL NAME)");
 		Optional<String> findName = textInputDialog.showAndWait();
 
 		for (Level level : levels) {
@@ -538,20 +552,20 @@ public class BoardPrototypeFinal extends Application {
 			System.out.println("Sorry, no name was found, please check for typos.");
 		}
 
-		BoardPrototypeFinal.updateDisplays();
+		Display.updateDisplays();
 	}
 
 	public static void addStudent() {
 
 		boolean containsLevel = false;
 
-		TextInputDialog textInputDialog = new TextInputDialog("NAME");
+		textInputDialog = new TextInputDialog("FULL NAME");
 		Optional<String> newName = textInputDialog.showAndWait();
 
-		textInputDialog = new TextInputDialog("LOCATION");
+		textInputDialog = new TextInputDialog("LOCATION CODE");
 		Optional<String> locationOfName = textInputDialog.showAndWait();
 
-		textInputDialog = new TextInputDialog("LEVEL");
+		textInputDialog = new TextInputDialog("LEVEL NUMBER (0-9)");
 		Optional<String> levelOfName = textInputDialog.showAndWait();
 		byte levelNum = Byte.parseByte(levelOfName.get());
 
@@ -571,12 +585,12 @@ public class BoardPrototypeFinal extends Application {
 			}
 		}
 
-		BoardPrototypeFinal.updateDisplays();
+		Display.updateDisplays();
 	}
 
 	public static void changeStudent() {
 
-		TextInputDialog textInputDialog = new TextInputDialog("FIND NAME");
+		textInputDialog = new TextInputDialog("FIND STUDENT (ENTER FULL NAME)");
 		Optional<String> findName = textInputDialog.showAndWait();
 
 		textInputDialog = new TextInputDialog("NEW NAME");
@@ -594,29 +608,12 @@ public class BoardPrototypeFinal extends Application {
 				if (level.getStudents().get(i).getName().equalsIgnoreCase(findName.get())) {
 					level.getStudents().get(i).setName(newName.get());
 					level.getStudents().get(i).setLocation(newLocationOfName.get());
-					BoardPrototypeFinal.changeStudentLevel(level.getStudents().get(i), newLevelNum);
+					Display.changeStudentLevel(level.getStudents().get(i), newLevelNum);
 					i--;
 				}
 			}
 		}
 
-		BoardPrototypeFinal.updateDisplays();
-	}
-
-	public static void promoteStudent() {
-
-		TextInputDialog textInputDialog = new TextInputDialog("FIND NAME");
-		Optional<String> findName = textInputDialog.showAndWait();
-
-		for (Level level : levels) {
-			for (int i = 0; i < level.getStudents().size(); i++) {
-				if (level.getStudents().get(i).getName().equalsIgnoreCase(findName.get())) {
-					BoardPrototypeFinal.changeStudentLevel(level.getStudents().get(i), (byte) (level.getLevel() + 1));
-					i--;
-				}
-			}
-		}
-
-		BoardPrototypeFinal.updateDisplays();
+		Display.updateDisplays();
 	}
 }
