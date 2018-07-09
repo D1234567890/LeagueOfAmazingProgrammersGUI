@@ -78,9 +78,8 @@ public class Display extends Application {
 		new Display();
 		launch(args);
 	}
-
 	public void start(Stage alternateStage) throws Exception {
-
+		
 		// Startup Code
 
 		logos.add(new Image("HooverHS.jpg"));
@@ -284,8 +283,8 @@ public class Display extends Application {
 		// Reading File Data
 
 		if (!loadedData) {
-
-			try {
+			levels = Salesforce.getStudents();
+			/*try {
 
 				fr = new FileReader("src/student_names.txt");
 				br = new BufferedReader(fr);
@@ -307,8 +306,8 @@ public class Display extends Application {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
-
+			}*/
+			
 			loadedData = true;
 		}
 
