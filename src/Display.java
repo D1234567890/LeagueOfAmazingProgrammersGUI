@@ -1,8 +1,4 @@
 import java.awt.Toolkit;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Random;
@@ -30,8 +26,6 @@ public class Display extends Application {
 	private static Toolkit toolkit = Toolkit.getDefaultToolkit();
 
 	private static TextInputDialog textInputDialog;
-	private static FileReader fr;
-	private static BufferedReader br;
 	private static Random r;
 
 	// Primitives
@@ -50,7 +44,7 @@ public class Display extends Application {
 
 	private static short translateX = (short) ((toolkit.getScreenSize().getWidth() / 2) - 75);
 
-	private static int timerWait = 10000;
+	private static int timerWait = 3000;
 	private static int slideCount = 0;
 	private static int slideOffset = 0;
 
@@ -58,10 +52,10 @@ public class Display extends Application {
 
 	private static Stage primaryStage;
 	private static Scene scene;
-	
+
 	private static FlowPane flowpane0, flowpane1, flowpane2, flowpane3, flowpane4, flowpane5, flowpane6, flowpane7,
 			flowpane8, flowpane9, flowpaneImage;
-	
+
 	private static Label labelZero, labelOne, labelTwo, labelThree, labelFour, labelFive, labelSix, labelSeven,
 			labelEight, labelNine;
 
@@ -72,9 +66,11 @@ public class Display extends Application {
 	private static ArrayList<Level> levels = new ArrayList<Level>();
 	private static ArrayList<Image> logos = new ArrayList<Image>();
 	private static ArrayList<Image> slideImages = new ArrayList<Image>();
+	
+	private static ArrayList<TextFlow> keyComponents = new ArrayList<TextFlow>();
 
 	public static void main(String[] args) {
-		
+
 		new Display();
 		launch(args);
 	}
@@ -261,7 +257,7 @@ public class Display extends Application {
 				if (!timerActivatedBefore) {
 					Display.timerController();
 				}
-				
+
 				ctrlPressed = false;
 				timerOn = true;
 			} else if (key.getCode() == KeyCode.F && ctrlPressed) {
@@ -270,6 +266,9 @@ public class Display extends Application {
 			} else if (key.getCode() == KeyCode.S && ctrlPressed) {
 				ctrlPressed = false;
 				Display.addImageSlide();
+			} else if (key.getCode() == KeyCode.U && ctrlPressed) {
+				ctrlPressed = false;
+				Display.updateDisplays();
 			}
 		});
 
@@ -285,34 +284,9 @@ public class Display extends Application {
 
 		if (!loadedData) {
 
-			try {
-
-				fr = new FileReader("src/student_names.txt");
-				br = new BufferedReader(fr);
-
-				String line;
-				String firstName;
-				String lastName;
-				String locationId = "";
-				byte level;
-
-				while ((line = br.readLine()) != null) {
-					firstName = line.substring(0, line.indexOf(' '));
-					lastName = line.substring(line.indexOf(' ') + 1, line.indexOf(','));
-					level = Byte.parseByte(line.substring(line.indexOf(',') + 1, line.indexOf(',') + 2));
-					locationId = line.substring(line.indexOf(',') + 3, line.indexOf(',') + 5);
-					levels.get(level).addStudent(new Student(firstName + " " + lastName, locationId, level));
-				}
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
+			Display.updateDisplays();
 			loadedData = true;
 		}
-
-		Display.updateDisplays();
 	}
 
 	public static void timerController() {
@@ -376,33 +350,43 @@ public class Display extends Application {
 		switch (levelNum) {
 		case 0:
 			scene.setRoot(flowpane0);
+			flowpane0.getChildren().addAll(keyComponents);
 			break;
 		case 1:
 			scene.setRoot(flowpane1);
+			flowpane1.getChildren().addAll(keyComponents);
 			break;
 		case 2:
 			scene.setRoot(flowpane2);
+			flowpane2.getChildren().addAll(keyComponents);
 			break;
 		case 3:
 			scene.setRoot(flowpane3);
+			flowpane3.getChildren().addAll(keyComponents);
 			break;
 		case 4:
 			scene.setRoot(flowpane4);
+			flowpane4.getChildren().addAll(keyComponents);
 			break;
 		case 5:
 			scene.setRoot(flowpane5);
+			flowpane5.getChildren().addAll(keyComponents);
 			break;
 		case 6:
 			scene.setRoot(flowpane6);
+			flowpane6.getChildren().addAll(keyComponents);
 			break;
 		case 7:
 			scene.setRoot(flowpane7);
+			flowpane7.getChildren().addAll(keyComponents);
 			break;
 		case 8:
 			scene.setRoot(flowpane8);
+			flowpane8.getChildren().addAll(keyComponents);
 			break;
 		case 9:
 			scene.setRoot(flowpane9);
+			flowpane9.getChildren().addAll(keyComponents);
 			break;
 		}
 	}
@@ -420,9 +404,9 @@ public class Display extends Application {
 		flowpane8.getChildren().clear();
 		flowpane9.getChildren().clear();
 	}
-	
-	public static void keyBuilder() {
-		
+
+	public static void createKeys() {
+
 		TextFlow key1 = new TextFlow();
 		TextFlow key2 = new TextFlow();
 		TextFlow key3 = new TextFlow();
@@ -431,7 +415,7 @@ public class Display extends Application {
 		TextFlow key6 = new TextFlow();
 		TextFlow key7 = new TextFlow();
 		TextFlow key8 = new TextFlow();
-		
+
 		Text labelForKey1 = new Text("The League");
 		Text labelForKey2 = new Text("San Diego Central");
 		Text labelForKey3 = new Text("Malcolm X Library");
@@ -440,7 +424,7 @@ public class Display extends Application {
 		Text labelForKey6 = new Text("San Elijo Middle School");
 		Text labelForKey7 = new Text("Wilson Middle School");
 		Text labelForKey8 = new Text("San Marcos Middle School");
-		
+
 		ImageView imageForKey1 = new ImageView();
 		ImageView imageForKey2 = new ImageView();
 		ImageView imageForKey3 = new ImageView();
@@ -449,7 +433,7 @@ public class Display extends Application {
 		ImageView imageForKey6 = new ImageView();
 		ImageView imageForKey7 = new ImageView();
 		ImageView imageForKey8 = new ImageView();
-		
+
 		imageForKey1.setPreserveRatio(true);
 		imageForKey2.setPreserveRatio(true);
 		imageForKey3.setPreserveRatio(true);
@@ -458,16 +442,16 @@ public class Display extends Application {
 		imageForKey6.setPreserveRatio(true);
 		imageForKey7.setPreserveRatio(true);
 		imageForKey8.setPreserveRatio(true);
-		
-		imageForKey1.setFitHeight(30);
-		imageForKey2.setFitHeight(30);
-		imageForKey3.setFitHeight(30);
-		imageForKey4.setFitHeight(30);
-		imageForKey5.setFitHeight(30);
-		imageForKey6.setFitHeight(30);
-		imageForKey7.setFitHeight(30);
-		imageForKey8.setFitHeight(30);
-		
+
+		imageForKey1.setFitHeight(60);
+		imageForKey2.setFitHeight(60);
+		imageForKey3.setFitHeight(60);
+		imageForKey4.setFitHeight(60);
+		imageForKey5.setFitHeight(60);
+		imageForKey6.setFitHeight(60);
+		imageForKey7.setFitHeight(60);
+		imageForKey8.setFitHeight(60);
+
 		imageForKey1.setImage(logos.get(2));
 		imageForKey2.setImage(logos.get(6));
 		imageForKey3.setImage(logos.get(3));
@@ -476,7 +460,7 @@ public class Display extends Application {
 		imageForKey6.setImage(logos.get(4));
 		imageForKey7.setImage(logos.get(7));
 		imageForKey8.setImage(logos.get(5));
-		
+
 		key1.getChildren().addAll(imageForKey1, labelForKey1);
 		key2.getChildren().addAll(imageForKey2, labelForKey2);
 		key3.getChildren().addAll(imageForKey3, labelForKey3);
@@ -485,11 +469,32 @@ public class Display extends Application {
 		key6.getChildren().addAll(imageForKey6, labelForKey6);
 		key7.getChildren().addAll(imageForKey7, labelForKey7);
 		key8.getChildren().addAll(imageForKey8, labelForKey8);
+
+		key1.setTranslateY(400);
+		key2.setTranslateY(400);
+		key3.setTranslateY(400);
+		key4.setTranslateY(400);
+		key5.setTranslateY(400);
+		key6.setTranslateY(400);
+		key7.setTranslateY(400);
+		key8.setTranslateY(400);
+
+		keyComponents.add(key1);
+		keyComponents.add(key2);
+		keyComponents.add(key3);
+		keyComponents.add(key4);
+		keyComponents.add(key5);
+		keyComponents.add(key6);
+		keyComponents.add(key7);
+		keyComponents.add(key8);
 	}
 
 	public static void updateDisplays() {
 
+		levels = Salesforce.getStudents();
+
 		Display.clearDisplays();
+		Display.createKeys();
 
 		flowpane0.getChildren().add(labelZero);
 		flowpane1.getChildren().add(labelOne);
@@ -545,7 +550,7 @@ public class Display extends Application {
 				imageView.setFitHeight(30);
 				studentLabel.getChildren().add(imageView);
 				studentLabel.setTranslateY(100);
-				
+
 				switch (i) {
 				case 0:
 					flowpane0.getChildren().add(studentLabel);
