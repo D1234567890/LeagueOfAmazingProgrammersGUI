@@ -41,7 +41,7 @@ public class Salesforce {
 
 			SObject[] s = queryResults.getRecords();
 
-			System.out.println(s.length);
+			System.out.println("Length: " + s.length);
 
 			if (queryResults.getSize() > 0) {
 

@@ -1,4 +1,5 @@
 import java.awt.Toolkit;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Random;
@@ -6,6 +7,7 @@ import java.util.Random;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
@@ -23,8 +25,8 @@ public class Display extends Application {
 
 	// Class References
 
+	private static File imageFiles = new File("src/Slide Images for the League");
 	private static Toolkit toolkit = Toolkit.getDefaultToolkit();
-
 	private static TextInputDialog textInputDialog;
 	private static Random r;
 
@@ -44,7 +46,7 @@ public class Display extends Application {
 
 	private static short translateX = (short) ((toolkit.getScreenSize().getWidth() / 2) - 75);
 
-	private static int timerWait = 3000;
+	private static int timerWait = 6000;
 	private static int slideCount = 0;
 	private static int slideOffset = 0;
 
@@ -66,7 +68,7 @@ public class Display extends Application {
 	private static ArrayList<Level> levels = new ArrayList<Level>();
 	private static ArrayList<Image> logos = new ArrayList<Image>();
 	private static ArrayList<Image> slideImages = new ArrayList<Image>();
-	
+
 	private static ArrayList<TextFlow> keyComponents = new ArrayList<TextFlow>();
 
 	public static void main(String[] args) {
@@ -79,23 +81,18 @@ public class Display extends Application {
 
 		// Startup Code
 
-		logos.add(new Image("HooverHS.jpg"));
-		logos.add(new Image("GompPrep.png"));
-		logos.add(new Image("LEAGUE.png"));
-		logos.add(new Image("MalcomX.png"));
-		logos.add(new Image("SanElijoMS.png"));
-		logos.add(new Image("SanMarcosMS.png"));
-		logos.add(new Image("SDCentral.jpg"));
-		logos.add(new Image("WilsonMS.jpg"));
+		for (File imageFile : imageFiles.listFiles()) {
+			slideImages.add(new Image("Slide Images for the League/" + imageFile.getName()));
+		}
 
-		slideImages.add(new Image("HooverHS.jpg"));
-		slideImages.add(new Image("GompPrep.png"));
-		slideImages.add(new Image("LEAGUE.png"));
-		slideImages.add(new Image("MalcomX.png"));
-		slideImages.add(new Image("SanElijoMS.png"));
-		slideImages.add(new Image("SanMarcosMS.png"));
-		slideImages.add(new Image("SDCentral.jpg"));
-		slideImages.add(new Image("WilsonMS.jpg"));
+		logos.add(new Image("Slide Images for the League/HooverHS.jpg"));
+		logos.add(new Image("Slide Images for the League/GompPrep.png"));
+		logos.add(new Image("Slide Images for the League/LEAGUE.png"));
+		logos.add(new Image("Slide Images for the League/MalcomX.png"));
+		logos.add(new Image("Slide Images for the League/SanElijoMS.png"));
+		logos.add(new Image("Slide Images for the League/SanMarcosMS.png"));
+		logos.add(new Image("Slide Images for the League/SDCentral.jpg"));
+		logos.add(new Image("Slide Images for the League/WilsonMS.jpg"));
 
 		primaryStage = new Stage();
 
@@ -301,14 +298,20 @@ public class Display extends Application {
 
 					if (System.currentTimeMillis() - millis >= timerWait) {
 
+						slideImages.clear();
+
+						for (File imageFile : imageFiles.listFiles()) {
+							slideImages.add(new Image("Slide Images for the League/" + imageFile.getName()));
+						}
+
 						r = new Random();
 
 						millis = System.currentTimeMillis();
 						Display.displayLevelSlide((byte) ((byte) ((slideCount - slideOffset) % 10)));
 
 						if (slideCount % frequency == 0 && slideImages.size() > 0) {
-							Display.displayImageSlide(r.nextInt(slideImages.size()));
 							slideOffset++;
+							Display.displayImageSlide(r.nextInt(slideImages.size()));
 						} else if (slideCount % frequency == 1) {
 							flowpaneImage.getChildren().clear();
 						}
@@ -346,6 +349,8 @@ public class Display extends Application {
 	}
 
 	public static void displayLevelSlide(byte levelNum) {
+
+		Display.clearKey();
 
 		switch (levelNum) {
 		case 0:
@@ -391,6 +396,79 @@ public class Display extends Application {
 		}
 	}
 
+	public static void clearKey() {
+
+		for (Node node : flowpane0.getChildren()) {
+			if (node == keyComponents.get(0)) {
+				flowpane0.getChildren().remove(node);
+				break;
+			}
+		}
+		
+		for (Node node : flowpane1.getChildren()) {
+			if (node == keyComponents.get(0)) {
+				flowpane1.getChildren().remove(node);
+				break;
+			}
+		}
+		
+		for (Node node : flowpane2.getChildren()) {
+			if (node == keyComponents.get(0)) {
+				flowpane2.getChildren().remove(node);
+				break;
+			}
+		}
+		
+		for (Node node : flowpane3.getChildren()) {
+			if (node == keyComponents.get(0)) {
+				flowpane3.getChildren().remove(node);
+				break;
+			}
+		}
+		
+		for (Node node : flowpane4.getChildren()) {
+			if (node == keyComponents.get(0)) {
+				flowpane4.getChildren().remove(node);
+				break;
+			}
+		}
+		
+		for (Node node : flowpane5.getChildren()) {
+			if (node == keyComponents.get(0)) {
+				flowpane5.getChildren().remove(node);
+				break;
+			}
+		}
+		
+		for (Node node : flowpane6.getChildren()) {
+			if (node == keyComponents.get(0)) {
+				flowpane6.getChildren().remove(node);
+				break;
+			}
+		}
+		
+		for (Node node : flowpane7.getChildren()) {
+			if (node == keyComponents.get(0)) {
+				flowpane7.getChildren().remove(node);
+				break;
+			}
+		}
+		
+		for (Node node : flowpane8.getChildren()) {
+			if (node == keyComponents.get(0)) {
+				flowpane8.getChildren().remove(node);
+				break;
+			}
+		}
+		
+		for (Node node : flowpane9.getChildren()) {
+			if (node == keyComponents.get(0)) {
+				flowpane9.getChildren().remove(node);
+				break;
+			}
+		}
+	}
+
 	public static void clearDisplays() {
 
 		flowpane0.getChildren().clear();
@@ -408,13 +486,6 @@ public class Display extends Application {
 	public static void createKeys() {
 
 		TextFlow key1 = new TextFlow();
-		TextFlow key2 = new TextFlow();
-		TextFlow key3 = new TextFlow();
-		TextFlow key4 = new TextFlow();
-		TextFlow key5 = new TextFlow();
-		TextFlow key6 = new TextFlow();
-		TextFlow key7 = new TextFlow();
-		TextFlow key8 = new TextFlow();
 
 		Text labelForKey1 = new Text("The League");
 		Text labelForKey2 = new Text("San Diego Central");
@@ -461,32 +532,13 @@ public class Display extends Application {
 		imageForKey7.setImage(logos.get(7));
 		imageForKey8.setImage(logos.get(5));
 
-		key1.getChildren().addAll(imageForKey1, labelForKey1);
-		key2.getChildren().addAll(imageForKey2, labelForKey2);
-		key3.getChildren().addAll(imageForKey3, labelForKey3);
-		key4.getChildren().addAll(imageForKey4, labelForKey4);
-		key5.getChildren().addAll(imageForKey5, labelForKey5);
-		key6.getChildren().addAll(imageForKey6, labelForKey6);
-		key7.getChildren().addAll(imageForKey7, labelForKey7);
-		key8.getChildren().addAll(imageForKey8, labelForKey8);
+		key1.getChildren().addAll(imageForKey1, labelForKey1, imageForKey2, labelForKey2, imageForKey3, labelForKey3,
+				imageForKey4, labelForKey4, imageForKey5, labelForKey5, imageForKey6, labelForKey6, imageForKey7,
+				labelForKey7, imageForKey8, labelForKey8);
 
 		key1.setTranslateY(400);
-		key2.setTranslateY(400);
-		key3.setTranslateY(400);
-		key4.setTranslateY(400);
-		key5.setTranslateY(400);
-		key6.setTranslateY(400);
-		key7.setTranslateY(400);
-		key8.setTranslateY(400);
 
 		keyComponents.add(key1);
-		keyComponents.add(key2);
-		keyComponents.add(key3);
-		keyComponents.add(key4);
-		keyComponents.add(key5);
-		keyComponents.add(key6);
-		keyComponents.add(key7);
-		keyComponents.add(key8);
 	}
 
 	public static void updateDisplays() {
@@ -513,7 +565,7 @@ public class Display extends Application {
 
 				TextFlow studentLabel = new TextFlow();
 				Text name = new Text(student.getName());
-				ImageView imageView = new ImageView("LEAGUE.png");
+				ImageView imageView = new ImageView("Slide Images for the League/LEAGUE.png");
 
 				final String location = student.getLocation();
 				name.setId("textfont");
