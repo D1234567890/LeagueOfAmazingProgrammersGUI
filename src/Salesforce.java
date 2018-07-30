@@ -28,7 +28,7 @@ public class Salesforce {
 
 		ConnectorConfig config = new ConnectorConfig();
 		config.setUsername("leaguebot@jointheleague.org");
-		config.setPassword("bot4leagueLQebABLmwVdQgsX92M1JU1aF");
+		config.setPassword("bot4league7oimRp2FyjBs5tddyYtVrvkLhm");
 		config.setTraceMessage(false);
 
 		try {
@@ -64,7 +64,7 @@ public class Salesforce {
 				}
 			}
 		} catch (ConnectionException e1) {
-			System.out.println("Failed to connect");
+			System.out.println("Failed to connect\n");
 			e1.printStackTrace();
 		}
 

@@ -36,6 +36,7 @@ public class Display extends Application {
 	private static boolean timerOn = false;
 	private static boolean timerActivatedBefore = false;
 	private static boolean ctrlPressed = false;
+	private static boolean keyCreated = false;
 
 	private static short width = (short) toolkit.getScreenSize().getWidth();
 	private static short height = (short) toolkit.getScreenSize().getHeight();
@@ -281,6 +282,7 @@ public class Display extends Application {
 
 		if (!loadedData) {
 
+			levels = Salesforce.getStudents();
 			Display.updateDisplays();
 			loadedData = true;
 		}
@@ -404,63 +406,63 @@ public class Display extends Application {
 				break;
 			}
 		}
-		
+
 		for (Node node : flowpane1.getChildren()) {
 			if (node == keyComponents.get(0)) {
 				flowpane1.getChildren().remove(node);
 				break;
 			}
 		}
-		
+
 		for (Node node : flowpane2.getChildren()) {
 			if (node == keyComponents.get(0)) {
 				flowpane2.getChildren().remove(node);
 				break;
 			}
 		}
-		
+
 		for (Node node : flowpane3.getChildren()) {
 			if (node == keyComponents.get(0)) {
 				flowpane3.getChildren().remove(node);
 				break;
 			}
 		}
-		
+
 		for (Node node : flowpane4.getChildren()) {
 			if (node == keyComponents.get(0)) {
 				flowpane4.getChildren().remove(node);
 				break;
 			}
 		}
-		
+
 		for (Node node : flowpane5.getChildren()) {
 			if (node == keyComponents.get(0)) {
 				flowpane5.getChildren().remove(node);
 				break;
 			}
 		}
-		
+
 		for (Node node : flowpane6.getChildren()) {
 			if (node == keyComponents.get(0)) {
 				flowpane6.getChildren().remove(node);
 				break;
 			}
 		}
-		
+
 		for (Node node : flowpane7.getChildren()) {
 			if (node == keyComponents.get(0)) {
 				flowpane7.getChildren().remove(node);
 				break;
 			}
 		}
-		
+
 		for (Node node : flowpane8.getChildren()) {
 			if (node == keyComponents.get(0)) {
 				flowpane8.getChildren().remove(node);
 				break;
 			}
 		}
-		
+
 		for (Node node : flowpane9.getChildren()) {
 			if (node == keyComponents.get(0)) {
 				flowpane9.getChildren().remove(node);
@@ -469,7 +471,7 @@ public class Display extends Application {
 		}
 	}
 
-	public static void clearDisplays() {
+	public static void resetDisplays() {
 
 		flowpane0.getChildren().clear();
 		flowpane1.getChildren().clear();
@@ -481,6 +483,23 @@ public class Display extends Application {
 		flowpane7.getChildren().clear();
 		flowpane8.getChildren().clear();
 		flowpane9.getChildren().clear();
+
+		flowpane0.getChildren().add(labelZero);
+		flowpane1.getChildren().add(labelOne);
+		flowpane2.getChildren().add(labelTwo);
+		flowpane3.getChildren().add(labelThree);
+		flowpane4.getChildren().add(labelFour);
+		flowpane5.getChildren().add(labelFive);
+		flowpane6.getChildren().add(labelSix);
+		flowpane7.getChildren().add(labelSeven);
+		flowpane8.getChildren().add(labelEight);
+		flowpane9.getChildren().add(labelNine);
+		
+		if (!keyCreated) {
+			Display.createKeys();
+		}
+		
+		keyCreated = true;
 	}
 
 	public static void createKeys() {
@@ -543,21 +562,7 @@ public class Display extends Application {
 
 	public static void updateDisplays() {
 
-		levels = Salesforce.getStudents();
-
-		Display.clearDisplays();
-		Display.createKeys();
-
-		flowpane0.getChildren().add(labelZero);
-		flowpane1.getChildren().add(labelOne);
-		flowpane2.getChildren().add(labelTwo);
-		flowpane3.getChildren().add(labelThree);
-		flowpane4.getChildren().add(labelFour);
-		flowpane5.getChildren().add(labelFive);
-		flowpane6.getChildren().add(labelSix);
-		flowpane7.getChildren().add(labelSeven);
-		flowpane8.getChildren().add(labelEight);
-		flowpane9.getChildren().add(labelNine);
+		Display.resetDisplays();
 
 		for (byte i = 0; i < levels.size(); i++) {
 
@@ -650,8 +655,6 @@ public class Display extends Application {
 				student.setLevelNum(levelNum);
 			}
 		}
-
-		Display.updateDisplays();
 	}
 
 	public static void removeStudent() {
@@ -661,18 +664,18 @@ public class Display extends Application {
 		textInputDialog = new TextInputDialog("FIND STUDENT (ENTER FULL NAME)");
 		Optional<String> findName = textInputDialog.showAndWait();
 
-		for (Level level : levels) {
+		OUTER_LOOP: for (Level level : levels) {
 			for (int i = 0; i < level.getStudents().size(); i++) {
 				if (level.getStudents().get(i).getName().equalsIgnoreCase(findName.get())) {
 					level.removeStudent(level.getStudents().get(i));
 					removedName = true;
-					i--;
+					break OUTER_LOOP;
 				}
 			}
 		}
 
 		if (!removedName) {
-			System.out.println("Sorry, no name was found, please check for typos.");
+			System.out.println("Sorry, the name " + findName.get() + " was not found. Check for typing errors and retry.");
 		}
 
 		Display.updateDisplays();
@@ -696,6 +699,7 @@ public class Display extends Application {
 			if (level.getLevel() == levelNum) {
 				level.addStudent(new Student(newName.get(), locationOfName.get(), levelNum));
 				containsLevel = true;
+				break;
 			}
 		}
 
@@ -704,6 +708,7 @@ public class Display extends Application {
 			for (Level level : levels) {
 				if (level.getLevel() == levelNum) {
 					level.addStudent(new Student(newName.get(), locationOfName.get(), levelNum));
+					break;
 				}
 			}
 		}
@@ -726,13 +731,13 @@ public class Display extends Application {
 		Optional<String> levelOfName = textInputDialog.showAndWait();
 		byte newLevelNum = Byte.parseByte(levelOfName.get());
 
-		for (Level level : levels) {
+		OUTER_LOOP: for (Level level : levels) {
 			for (int i = 0; i < level.getStudents().size(); i++) {
 				if (level.getStudents().get(i).getName().equalsIgnoreCase(findName.get())) {
 					level.getStudents().get(i).setName(newName.get());
 					level.getStudents().get(i).setLocation(newLocationOfName.get());
 					Display.changeStudentLevel(level.getStudents().get(i), newLevelNum);
-					i--;
+					break OUTER_LOOP;
 				}
 			}
 		}
